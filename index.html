@@ -632,7 +632,8 @@ function render(){
       +(b.link?'<a class="tag" href="'+esc(b.link)+'" target="_blank" rel="noopener">'+d.product+'</a>':'')
       +acts+'</div></div>'
       +(hasQuote(b)?'<div class="amt q">'+eur(quoteTotal(b))+'<small>'+d.quoted+'</small></div>':'')
-      +(canDrop?'<button class="del" data-del="purchases:'+b.id+'" data-path="">×</button>':'');
+      +(canDrop?'<button class="del" data-del="purchases:'+b.id+'" data-path="">×</button>':'')
+      +'</div>';
   }) : '<div class="empty">'+d.noReq+'</div>';
 
   $('listBuy').innerHTML = fb.length ? group(fb,b=>{
@@ -653,7 +654,8 @@ function render(){
       +(b.image_path?'<button class="tag" data-img="'+esc(b.image_path)+'">'+d.shotTag+'</button>':'')
       +'</div></div>'
       +'<div class="amt">'+eur(cost(b))+(b.received!=null?'<small>'+(ex>=0?'+':'')+eur(ex)+' '+d.extra+'</small>':'')+'</div>'
-      +(viewer?'':'<button class="del" data-del="purchases:'+b.id+'" data-path="'+esc(b.image_path||'')+'">×</button>');
+      +(viewer?'':'<button class="del" data-del="purchases:'+b.id+'" data-path="'+esc(b.image_path||'')+'">×</button>')
+      +'</div>';
   }) : '<div class="empty">'+d.emptyBuy+'</div>';
 
   $('listDlv').innerHTML = fd.length ? group(fd,x=>
@@ -663,6 +665,7 @@ function render(){
     +(x.image_path?'<div class="tags"><button class="tag" data-img="'+esc(x.image_path)+'">'+d.receiptTag+'</button></div>':'')
     +'</div><div class="amt">'+eur(+x.price)+'</div>'
     +(viewer?'':'<button class="del" data-del="deliveries:'+x.id+'" data-path="'+esc(x.image_path||'')+'">×</button>')
+    +'</div>'
   ) : '<div class="empty">'+d.emptyDlv+'</div>';
 
   $('listTr').innerHTML = ft.length ? group(ft,x=>
@@ -672,6 +675,7 @@ function render(){
     +(x.image_path?'<div class="tags"><button class="tag" data-img="'+esc(x.image_path)+'">'+d.receiptTag+'</button></div>':'')
     +'</div><div class="amt in">+'+eur(+x.amount)+'</div>'
     +(viewer?'':'<button class="del" data-del="transfers:'+x.id+'" data-path="'+esc(x.image_path||'')+'">×</button>')
+    +'</div>'
   ) : '<div class="empty">'+d.emptyTr+'</div>';
 
   document.querySelectorAll('[data-img]').forEach(b=>b.onclick=()=>showImg(b.dataset.img));
