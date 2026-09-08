@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="de" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Karla:wght@400;500;700&family=Noto+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16211C; --paper:#E9EEEA; --surface:#F5F8F5; --line:#C3CDC5;
+    --muted:#63736A; --gold:#B0781F; --alert:#9E3423; --green:#2F6B47;
+    --sans:"Karla","Noto Sans Arabic",-apple-system,BlinkMacSystemFont,sans-serif;
+    --serif:"Instrument Serif","Noto Sans Arabic",Georgia,serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  [dir=rtl] body{font-family:"Noto Sans Arabic","Karla",sans-serif}
+  [dir=rtl] .big,[dir=rtl] .split b,[dir=rtl] .row .amt{font-family:"Noto Sans Arabic",var(--serif)}
+  .wrap{max-width:760px;margin:0 auto;padding:24px 18px 110px}
+  h1{font-family:var(--serif);font-size:28px;font-weight:400;margin:0}
+  [dir=rtl] h1{font-family:"Noto Sans Arabic",var(--serif);font-weight:500;font-size:24px}
+  h1 span{display:block;font-family:var(--sans);font-size:13px;color:var(--muted);margin-top:2px}
+  .top{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:16px}
+  .who{font-size:12.5px;color:var(--muted);text-align:end}
+  .who a,.who button{display:block;margin-inline-start:auto;margin-top:3px;background:none;border:none;color:var(--muted);text-decoration:underline;cursor:pointer;font-family:inherit;font-size:12.5px;padding:0}
+  .langs{display:flex;border:1px solid var(--line);border-radius:20px;overflow:hidden;width:fit-content;margin-bottom:18px}
+  .langs button{font-family:inherit;font-size:12.5px;padding:5px 13px;background:none;border:none;cursor:pointer;color:var(--muted)}
+  .langs button.on{background:var(--ink);color:var(--paper)}
+  .gate{max-width:420px;margin:12vh auto;padding:0 20px}
+  .gate p{font-size:14px;color:var(--muted);margin:0 0 16px}
+  .banner{border:1px solid var(--gold);background:#FAF2E1;border-radius:4px;padding:11px 14px;font-size:13.5px;margin-bottom:18px}
+
+  .hero{border:1.5px solid var(--ink);border-radius:4px;padding:20px;margin-bottom:20px;background:var(--surface)}
+  .big{font-family:var(--serif);font-size:52px;line-height:1.05;color:var(--green)}
+  .big.zero{color:var(--ink)}
+  .cap{font-size:13.5px;color:var(--muted);margin-top:8px;max-width:46ch}
+  .split{display:flex;gap:24px;margin-top:18px;padding-top:14px;border-top:1px solid var(--line);flex-wrap:wrap}
+  .split>div{font-size:13px;color:var(--muted)}
+  .split b{display:block;font-family:var(--serif);font-size:22px;font-weight:400;color:var(--ink)}
+
+  .tabs{display:flex;border-bottom:1.5px solid var(--line);margin-bottom:8px;overflow-x:auto;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{font-family:inherit;font-size:14.5px;background:none;border:none;padding:9px 12px;cursor:pointer;color:var(--muted);border-bottom:2.5px solid transparent;margin-bottom:-1.5px;white-space:nowrap}
+  .tab.on{color:var(--ink);font-weight:500;border-bottom-color:var(--ink)}
+  .badge{display:inline-block;min-width:18px;padding:0 5px;margin-inline-start:5px;border-radius:9px;background:var(--gold);color:#fff;font-size:11.5px;line-height:18px;text-align:center;vertical-align:1px}
+
+  h2{font-size:12.5px;font-weight:700;margin:20px 0 4px;color:var(--muted)}
+  .row{display:flex;gap:11px;padding:14px 0;border-bottom:1px solid var(--line);align-items:flex-start}
+  .row .b{flex:1;min-width:0}
+  .row .t{font-weight:500;word-break:break-word}
+  .row .s{font-size:13px;color:var(--muted);margin-top:2px}
+  .row .amt{font-family:var(--serif);font-size:20px;flex:none;text-align:end;min-width:80px}
+  .row .amt small{display:block;font-family:var(--sans);font-size:11px;color:var(--muted);line-height:1.4}
+  .row .amt.pos{color:var(--green)} .row .amt.neg{color:var(--alert)}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;align-items:center}
+  .tag{font-size:12px;border:1px solid var(--line);border-radius:3px;padding:2px 7px;color:var(--muted);background:#fff;font-family:inherit}
+  .tag.ok{border-color:var(--green);color:var(--green)}
+  .tag.no{border-color:var(--alert);color:var(--alert)}
+  .tag.wait{border-color:var(--gold);color:#8A5E18}
+  .act{font-size:12.5px;font-family:inherit;border-radius:3px;padding:5px 11px;cursor:pointer;border:1px solid var(--ink);background:var(--ink);color:var(--paper)}
+  .act.sec{background:none;color:var(--ink)}
+  .act.no{background:none;color:var(--alert);border-color:var(--alert)}
+  .offer{display:flex;gap:7px;margin-top:9px;align-items:center;flex-wrap:wrap}
+  .offer input{width:110px;font-family:inherit;font-size:15px;padding:7px 9px;border:1px solid var(--line);border-radius:3px;background:#fff;color:var(--ink);direction:ltr}
+  .del{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:0 2px}
+  .empty{border:1px dashed var(--line);border-radius:4px;padding:26px;text-align:center;color:var(--muted);font-size:14.5px;margin-top:14px}
+  .status{font-size:13px;color:var(--muted);margin-top:14px;min-height:19px}
+  .status.err{color:var(--alert)}
+  label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:3px}
+  input,textarea{width:100%;font-family:inherit;font-size:16px;padding:9px 10px;border:1px solid var(--line);border-radius:3px;background:#fff;color:var(--ink)}
+  button.go{font-family:inherit;font-size:15px;font-weight:500;cursor:pointer;border:1px solid var(--ink);border-radius:3px;padding:11px 18px;background:var(--ink);color:var(--paper)}
+  :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+  .fab{position:fixed;inset-inline-end:20px;bottom:24px;width:56px;height:56px;border-radius:28px;border:none;
+       background:var(--ink);color:var(--paper);font-size:30px;cursor:pointer;z-index:5;box-shadow:0 3px 14px rgba(22,33,28,.28)}
+  .sheet{position:fixed;inset:0;background:rgba(22,33,28,.5);display:none;z-index:10;align-items:flex-end;justify-content:center}
+  .sheet.on{display:flex}
+  .card{background:var(--paper);width:100%;max-width:640px;max-height:92vh;overflow-y:auto;border-radius:14px 14px 0 0;padding:20px 18px 32px}
+  .card h3{font-family:var(--serif);font-size:22px;font-weight:400;margin:0 0 14px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+  .full{grid-column:1/-1}
+  .cancel{background:none;border:none;color:var(--muted);font-family:inherit;font-size:14px;text-decoration:underline;cursor:pointer;padding:10px 4px}
+  @media (max-width:520px){.grid{grid-template-columns:1fr}.big{font-size:42px}}
+</style>
+</head>
+<body>
+
+<div class="gate" id="gate" hidden>
+  <div class="langs" id="langsGate"></div>
+  <h1>Marge<span id="gTag"></span></h1>
+  <p id="gIntro"></p>
+  <form id="fLogin">
+    <label for="email" id="lEmail"></label>
+    <input id="email" type="email" required autocomplete="email" placeholder="name@mail.com">
+    <div style="margin-top:12px"><button class="go" type="submit" id="loginBtn"></button></div>
+  </form>
+  <div class="status" id="gateStatus" role="status"></div>
+</div>
+
+<div class="wrap" id="app" hidden>
+  <div class="top">
+    <h1>Marge<span id="aTag"></span></h1>
+    <div class="who"><span id="me"></span><a href="./" id="backLink"></a><button id="out"></button></div>
+  </div>
+
+  <div class="langs" id="langsApp"></div>
+  <div class="banner" id="viewerBanner" hidden></div>
+
+  <section class="hero">
+    <div class="big" id="total">€0,00</div>
+    <div class="cap" id="totalCap"></div>
+    <div class="split">
+      <div><span id="lSettled"></span><b id="sSettled">€0</b></div>
+      <div><span id="lOpenM"></span><b id="sOpenM">€0</b></div>
+      <div><span id="lDeals"></span><b id="sDeals">0</b></div>
+      <div><span id="lExtras"></span><b id="sExtras">€0</b></div>
+    </div>
+  </section>
+
+  <div class="tabs">
+    <button class="tab on" data-t="none" id="tabNone"></button>
+    <button class="tab" data-t="pend" id="tabPend"></button>
+    <button class="tab" data-t="acc"  id="tabAcc"></button>
+    <button class="tab" data-t="ref"  id="tabRef"></button>
+    <button class="tab" data-t="ext"  id="tabExt"></button>
+  </div>
+
+  <div id="listNone"></div>
+  <div id="listPend" hidden></div>
+  <div id="listAcc"  hidden></div>
+  <div id="listRef"  hidden></div>
+  <div id="listExt"  hidden></div>
+
+  <div class="status" id="status" role="status"></div>
+</div>
+
+<button class="fab" id="fab" hidden aria-label="+">+</button>
+
+<div class="sheet" id="sheet">
+  <div class="card">
+    <h3 id="shTitle"></h3>
+    <form id="fExtra">
+      <div class="grid">
+        <div><label for="e_date" id="lDate"></label><input id="e_date" type="date" required></div>
+        <div><label for="e_amt" id="lAmount"></label><input id="e_amt" type="number" step="0.01" min="0" required placeholder="0.00"></div>
+        <div class="full"><label for="e_label" id="lLabel"></label><input id="e_label" required></div>
+        <div class="full"><label for="e_note" id="lNote"></label><textarea id="e_note"></textarea></div>
+        <div class="full"><button class="go" type="submit" id="eSave"></button><button type="button" class="cancel" id="cancelBtn"></button></div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+const SUPABASE_URL = 'https://riuucxronhqigeqchskh.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_bgGl55ybrqhbX3Abs3Jdeg_DhBiioSp';
+
+const T = {
+  de:{_name:'DE',_locale:'de-DE',_dir:'ltr',
+    tag:'Preisvorschläge und Marge, getrennt vom Buch',
+    tagViewer:'Preise vorschlagen und Stand verfolgen',
+    gateTag:'Preisvorschläge und Marge',
+    gateIntro:'Trag deine E-Mail ein. Du bekommst einen Link zum Anmelden.',
+    email:'E-Mail',sendLink:'Link schicken',linkSent:'Link ist unterwegs.',signout:'Abmelden',back:'Zum Buch',
+    viewerBanner:'Du schlägst Preise vor. Angenommen oder abgelehnt entscheidet der Besitzer.',
+    total:'Marge angenommen',totalCap:'Summe aus angenommenen Vorschlägen minus deine Kosten. Getrennt vom Auslagenbuch.',
+    settled:'davon bezahlt',openM:'noch offen',deals:'Deals',extras:'Extras',
+    tabNone:'Ohne Preis',tabPend:'Vorschläge',tabAcc:'Angenommen',tabRef:'Abgelehnt',tabExt:'Extras',
+    cost:'Kosten',offered:'Vorschlag',margin:'Marge',
+    propose:'Vorschlagen',revise:'Neuer Vorschlag',send:'Senden',
+    accept:'Annehmen',refuse:'Ablehnen',markPaid:'Als bezahlt',unpaid:'Doch nicht bezahlt',
+    paid:'bezahlt',pending:'wartet auf Antwort',refused:'abgelehnt',accepted:'angenommen',
+    emptyNone:'Alle Einkäufe haben einen Vorschlag.',emptyPend:'Keine offenen Vorschläge.',
+    emptyAcc:'Noch nichts angenommen.',emptyRef:'Nichts abgelehnt.',emptyExt:'Keine Extras erfasst.',
+    addExtra:'Extra hinzufügen',date:'Datum',amount:'Betrag €',lbl:'Wofür',note:'Notiz',save:'Speichern',cancel:'Abbrechen',
+    saved:'Gespeichert.',sent:'Vorschlag gesendet.',accepted2:'Angenommen.',refused2:'Abgelehnt.',
+    deleted:'Gelöscht.',confirmDel:'Löschen?',
+    errLoad:'Konnte nicht laden: ',errSave:'Nicht gespeichert: ',errLogin:'Hat nicht geklappt: '},
+
+  en:{_name:'EN',_locale:'en-GB',_dir:'ltr',
+    tag:'Price offers and margin, separate from the ledger',
+    tagViewer:'Propose prices and follow the outcome',
+    gateTag:'Price offers and margin',
+    gateIntro:'Enter your email. You get a link to sign in.',
+    email:'Email',sendLink:'Send link',linkSent:'Link sent.',signout:'Sign out',back:'To the ledger',
+    viewerBanner:'You propose prices. Accepting or refusing is the owner’s call.',
+    total:'Margin accepted',totalCap:'Accepted offers minus your cost. Kept separate from the expenses ledger.',
+    settled:'of that paid',openM:'still open',deals:'Deals',extras:'Extras',
+    tabNone:'No price yet',tabPend:'Offers',tabAcc:'Accepted',tabRef:'Refused',tabExt:'Extras',
+    cost:'cost',offered:'offer',margin:'margin',
+    propose:'Propose',revise:'New offer',send:'Send',
+    accept:'Accept',refuse:'Refuse',markPaid:'Mark paid',unpaid:'Not paid after all',
+    paid:'paid',pending:'awaiting answer',refused:'refused',accepted:'accepted',
+    emptyNone:'Every purchase has an offer.',emptyPend:'No offers waiting.',
+    emptyAcc:'Nothing accepted yet.',emptyRef:'Nothing refused.',emptyExt:'No extras recorded.',
+    addExtra:'Add an extra',date:'Date',amount:'Amount €',lbl:'What for',note:'Note',save:'Save',cancel:'Cancel',
+    saved:'Saved.',sent:'Offer sent.',accepted2:'Accepted.',refused2:'Refused.',
+    deleted:'Deleted.',confirmDel:'Delete?',
+    errLoad:'Could not load: ',errSave:'Not saved: ',errLogin:'That did not work: '},
+
+  ar:{_name:'ع',_locale:'ar-u-nu-latn',_dir:'rtl',
+    tag:'عروض الأسعار والهامش، منفصلة عن الدفتر',
+    tagViewer:'اقترح الأسعار وتابع النتيجة',
+    gateTag:'عروض الأسعار والهامش',
+    gateIntro:'أدخل بريدك الإلكتروني. سيصلك رابط لتسجيل الدخول.',
+    email:'البريد الإلكتروني',sendLink:'أرسل الرابط',linkSent:'تم إرسال الرابط.',signout:'تسجيل الخروج',back:'إلى الدفتر',
+    viewerBanner:'أنت تقترح الأسعار. القبول أو الرفض قرار المالك.',
+    total:'الهامش المقبول',totalCap:'العروض المقبولة ناقص تكلفتك. منفصل عن دفتر المصاريف.',
+    settled:'المدفوع منه',openM:'ما زال مفتوحاً',deals:'الصفقات',extras:'الإضافات',
+    tabNone:'بلا سعر',tabPend:'العروض',tabAcc:'مقبولة',tabRef:'مرفوضة',tabExt:'إضافات',
+    cost:'التكلفة',offered:'العرض',margin:'الهامش',
+    propose:'اقتراح',revise:'عرض جديد',send:'إرسال',
+    accept:'قبول',refuse:'رفض',markPaid:'تم الدفع',unpaid:'لم يُدفع بعد',
+    paid:'مدفوع',pending:'بانتظار الرد',refused:'مرفوض',accepted:'مقبول',
+    emptyNone:'كل المشتريات لديها عرض.',emptyPend:'لا عروض معلّقة.',
+    emptyAcc:'لم يُقبل شيء بعد.',emptyRef:'لا شيء مرفوض.',emptyExt:'لا إضافات مسجّلة.',
+    addExtra:'إضافة مصروف',date:'التاريخ',amount:'المبلغ €',lbl:'لماذا',note:'ملاحظة',save:'حفظ',cancel:'إلغاء',
+    saved:'تم الحفظ.',sent:'أُرسل العرض.',accepted2:'تم القبول.',refused2:'تم الرفض.',
+    deleted:'تم الحذف.',confirmDel:'حذف؟',
+    errLoad:'تعذّر التحميل: ',errSave:'لم يُحفظ: ',errLogin:'لم ينجح الأمر: '}
+};
+const LANGS=['de','en','ar'];
+let lang=(()=>{try{const s=localStorage.getItem('auslagen.lang');if(LANGS.includes(s))return s}catch{}
+  const n=(navigator.language||'de').slice(0,2);return LANGS.includes(n)?n:'de'})();
+const t=k=>T[lang][k];
+
+const sb=createClient(SUPABASE_URL,SUPABASE_KEY);
+let buys=[],offers=[],extras=[],uid=null,ownerId=null,viewer=false,tab='none';
+
+const $=i=>document.getElementById(i);
+function fmt(n,d){try{return new Intl.NumberFormat(T[lang]._locale,{style:'currency',currency:'EUR',
+  minimumFractionDigits:d,maximumFractionDigits:d}).format(n)}catch{return '€'+n.toFixed(d)}}
+const eur=n=>fmt(n,2), eur0=n=>fmt(Math.round(n),0);
+const esc=s=>(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const nz=v=>v==null?0:+v;
+const numv=v=>Math.max(0,parseFloat(String(v).replace(',','.'))||0);
+const say=(m,e)=>{$('status').textContent=m;$('status').className='status'+(e?' err':'')};
+const today=()=>new Date().toISOString().slice(0,10);
+const cost=b=>nz(b.price)+nz(b.shipping);
+const offerOf=b=>offers.find(o=>o.purchase_id===b.id);
+const marginOf=o=>{const b=buys.find(x=>x.id===o.purchase_id); return b? +o.price-cost(b):0;};
+
+function buildLangBar(el){
+  el.innerHTML=LANGS.map(l=>`<button data-l="${l}"${l===lang?' class="on"':''}>${T[l]._name}</button>`).join('');
+  el.querySelectorAll('button').forEach(b=>b.onclick=()=>{lang=b.dataset.l;
+    try{localStorage.setItem('auslagen.lang',lang)}catch{}; applyLang(); if(uid) render();});
+}
+function applyLang(){
+  const d=T[lang];
+  document.documentElement.lang=lang; document.documentElement.dir=d._dir;
+  const set=(id,v)=>{const e=$(id); if(e) e.textContent=v};
+  set('gTag',d.gateTag); set('gIntro',d.gateIntro); set('lEmail',d.email); set('loginBtn',d.sendLink);
+  set('aTag',viewer?d.tagViewer:d.tag); set('out',d.signout); set('backLink',d.back);
+  set('viewerBanner',d.viewerBanner); set('totalCap',d.totalCap);
+  set('lSettled',d.settled); set('lOpenM',d.openM); set('lDeals',d.deals); set('lExtras',d.extras);
+  set('tabNone',d.tabNone); set('tabAcc',d.tabAcc); set('tabRef',d.tabRef); set('tabExt',d.tabExt);
+  set('shTitle',d.addExtra); set('lDate',d.date); set('lAmount',d.amount); set('lLabel',d.lbl);
+  set('lNote',d.note); set('eSave',d.save); set('cancelBtn',d.cancel);
+  buildLangBar($('langsGate')); buildLangBar($('langsApp'));
+}
+
+$('fLogin').onsubmit=async e=>{
+  e.preventDefault(); $('loginBtn').disabled=true;
+  const {error}=await sb.auth.signInWithOtp({email:$('email').value.trim(),
+    options:{emailRedirectTo:window.location.href}});
+  $('loginBtn').disabled=false;
+  const s=$('gateStatus');
+  if(error){s.textContent=t('errLogin')+error.message;s.className='status err'}
+  else{s.textContent=t('linkSent');s.className='status'}
+};
+$('out').onclick=async()=>{await sb.auth.signOut();location.reload()};
+
+applyLang();
+sb.auth.onAuthStateChange((_e,s)=>start(s));
+const {data:{session}}=await sb.auth.getSession();
+start(session);
+
+async function start(session){
+  if(!session){$('gate').hidden=false;$('app').hidden=true;$('fab').hidden=true;return}
+  if(uid===session.user.id) return;
+  uid=session.user.id;
+  $('gate').hidden=true; $('app').hidden=false; $('me').textContent=session.user.email;
+  const {data:sh}=await sb.from('shares').select('owner_id').ilike('viewer_email',session.user.email);
+  viewer=!!(sh&&sh.length); ownerId=viewer?sh[0].owner_id:uid;
+  $('viewerBanner').hidden=!viewer; $('fab').hidden=viewer;
+  $('e_date').value=today();
+  applyLang(); loadAll();
+}
+
+async function loadAll(){
+  const [p,o,x]=await Promise.all([
+    sb.from('purchases').select('*').not('paid','is',null).eq('approval','approved').order('date',{ascending:false}),
+    sb.from('offers').select('*'),
+    sb.from('extras').select('*').order('date',{ascending:false})
+  ]);
+  const err=p.error||o.error||x.error;
+  if(err) return say(t('errLoad')+err.message,true);
+  buys=p.data; offers=o.data; extras=x.data;
+  say(''); render();
+}
+
+function render(){
+  const d=T[lang];
+  const acc=offers.filter(o=>o.status==='accepted');
+  const pend=offers.filter(o=>o.status==='pending');
+  const ref=offers.filter(o=>o.status==='refused');
+  const noOffer=buys.filter(b=>!offerOf(b));
+
+  const totalM=acc.reduce((s,o)=>s+marginOf(o),0);
+  const settledM=acc.filter(o=>o.settled).reduce((s,o)=>s+marginOf(o),0);
+  const extrasTotal=extras.reduce((s,x)=>s+ +x.amount,0);
+
+  $('total').textContent=eur(totalM);
+  $('total').className='big'+(totalM===0?' zero':'');
+  $('sSettled').textContent=eur0(settledM);
+  $('sOpenM').textContent=eur0(totalM-settledM);
+  $('sDeals').textContent=acc.length;
+  $('sExtras').textContent=eur0(extrasTotal);
+
+  $('tabPend').innerHTML=d.tabPend+(pend.length?'<span class="badge">'+pend.length+'</span>':'');
+
+  /* purchases without an offer */
+  $('listNone').innerHTML = noOffer.length ? noOffer.map(b=>
+    '<div class="row"><div class="b"><div class="t">'+esc(b.item)+'</div>'
+    +'<div class="s">'+b.date+' · '+d.cost+' '+eur(cost(b))+'</div>'
+    +(viewer?'<div class="offer"><input type="number" step="0.01" min="0" id="p_'+b.id+'" placeholder="0.00">'
+      +'<button class="act" data-new="'+b.id+'">'+d.send+'</button></div>':'')
+    +'</div></div>').join('') : '<div class="empty">'+d.emptyNone+'</div>';
+
+  /* pending offers */
+  $('listPend').innerHTML = pend.length ? pend.map(o=>{
+    const b=buys.find(x=>x.id===o.purchase_id); if(!b) return '';
+    const m=marginOf(o);
+    return '<div class="row"><div class="b"><div class="t">'+esc(b.item)+'</div>'
+      +'<div class="s">'+d.cost+' '+eur(cost(b))+' · '+d.offered+' '+eur(+o.price)+'</div>'
+      +'<div class="tags"><span class="tag wait">'+d.pending+'</span>'
+      +(!viewer?'<button class="act" data-acc="'+o.id+'">'+d.accept+'</button>'
+               +'<button class="act no" data-ref="'+o.id+'">'+d.refuse+'</button>':'')
+      +'</div></div>'
+      +'<div class="amt '+(m>=0?'pos':'neg')+'">'+(m>=0?'+':'')+eur(m)+'<small>'+d.margin+'</small></div></div>';
+  }).join('') : '<div class="empty">'+d.emptyPend+'</div>';
+
+  /* accepted */
+  $('listAcc').innerHTML = acc.length ? acc.map(o=>{
+    const b=buys.find(x=>x.id===o.purchase_id); if(!b) return '';
+    const m=marginOf(o);
+    return '<div class="row"><div class="b"><div class="t">'+esc(b.item)+'</div>'
+      +'<div class="s">'+d.cost+' '+eur(cost(b))+' · '+d.offered+' '+eur(+o.price)+'</div>'
+      +'<div class="tags"><span class="tag ok">'+d.accepted+'</span>'
+      +(o.settled?'<span class="tag ok">'+d.paid+'</span>':'')
+      +(!viewer?'<button class="act sec" data-pay="'+o.id+'" data-v="'+(o.settled?'0':'1')+'">'
+        +(o.settled?d.unpaid:d.markPaid)+'</button>':'')
+      +'</div></div>'
+      +'<div class="amt '+(m>=0?'pos':'neg')+'">'+(m>=0?'+':'')+eur(m)+'<small>'+d.margin+'</small></div></div>';
+  }).join('') : '<div class="empty">'+d.emptyAcc+'</div>';
+
+  /* refused */
+  $('listRef').innerHTML = ref.length ? ref.map(o=>{
+    const b=buys.find(x=>x.id===o.purchase_id); if(!b) return '';
+    return '<div class="row"><div class="b"><div class="t">'+esc(b.item)+'</div>'
+      +'<div class="s">'+d.cost+' '+eur(cost(b))+' · '+d.offered+' '+eur(+o.price)+'</div>'
+      +'<div class="tags"><span class="tag no">'+d.refused+'</span></div>'
+      +(viewer?'<div class="offer"><input type="number" step="0.01" min="0" id="r_'+o.id+'" placeholder="0.00">'
+        +'<button class="act" data-rev="'+o.id+'">'+d.revise+'</button></div>':'')
+      +'</div></div>';
+  }).join('') : '<div class="empty">'+d.emptyRef+'</div>';
+
+  /* extras */
+  $('listExt').innerHTML = extras.length ? extras.map(x=>
+    '<div class="row"><div class="b"><div class="t">'+esc(x.label)+'</div>'
+    +'<div class="s">'+x.date+(x.note?' · '+esc(x.note):'')+'</div></div>'
+    +'<div class="amt">'+eur(+x.amount)+'</div>'
+    +(viewer?'':'<button class="del" data-del="'+x.id+'">×</button>')+'</div>'
+  ).join('') : '<div class="empty">'+d.emptyExt+'</div>';
+
+  document.querySelectorAll('[data-new]').forEach(b=>b.onclick=()=>propose(b.dataset.new));
+  document.querySelectorAll('[data-rev]').forEach(b=>b.onclick=()=>revise(b.dataset.rev));
+  document.querySelectorAll('[data-acc]').forEach(b=>b.onclick=()=>decide(b.dataset.acc,'accepted'));
+  document.querySelectorAll('[data-ref]').forEach(b=>b.onclick=()=>decide(b.dataset.ref,'refused'));
+  document.querySelectorAll('[data-pay]').forEach(b=>b.onclick=()=>setPaid(b.dataset.pay,b.dataset.v==='1'));
+  document.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>delExtra(b.dataset.del));
+}
+
+async function propose(purchaseId){
+  const v=$('p_'+purchaseId).value; if(!v) return;
+  const {error}=await sb.from('offers').insert({
+    purchase_id:purchaseId, owner_id:ownerId, proposed_by:uid,
+    price:numv(v), status:'pending', settled:false});
+  if(error) return say(t('errSave')+error.message,true);
+  await loadAll(); say(t('sent'));
+}
+async function revise(offerId){
+  const v=$('r_'+offerId).value; if(!v) return;
+  const {error}=await sb.from('offers').update({price:numv(v),status:'pending'}).eq('id',offerId);
+  if(error) return say(t('errSave')+error.message,true);
+  await loadAll(); say(t('sent'));
+}
+async function decide(offerId,verdict){
+  const {error}=await sb.from('offers').update({status:verdict}).eq('id',offerId);
+  if(error) return say(t('errSave')+error.message,true);
+  await loadAll(); say(verdict==='accepted'?t('accepted2'):t('refused2'));
+}
+async function setPaid(offerId,val){
+  const {error}=await sb.from('offers').update({settled:val}).eq('id',offerId);
+  if(error) return say(t('errSave')+error.message,true);
+  await loadAll(); say(t('saved'));
+}
+async function delExtra(id){
+  if(!confirm(t('confirmDel'))) return;
+  const {error}=await sb.from('extras').delete().eq('id',id);
+  if(error) return say(t('errSave')+error.message,true);
+  await loadAll(); say(t('deleted'));
+}
+
+$('fab').onclick=()=>$('sheet').classList.add('on');
+$('cancelBtn').onclick=()=>$('sheet').classList.remove('on');
+$('sheet').onclick=e=>{if(e.target.id==='sheet')$('sheet').classList.remove('on')};
+$('fExtra').onsubmit=async e=>{
+  e.preventDefault();
+  const {error}=await sb.from('extras').insert({
+    date:$('e_date').value, label:$('e_label').value.trim(),
+    amount:numv($('e_amt').value), note:$('e_note').value.trim()||null});
+  if(error) return say(t('errSave')+error.message,true);
+  $('fExtra').reset(); $('e_date').value=today();
+  $('sheet').classList.remove('on'); await loadAll(); say(t('saved'));
+};
+
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
+  tab=b.dataset.t;
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===b));
+  $('listNone').hidden=tab!=='none'; $('listPend').hidden=tab!=='pend';
+  $('listAcc').hidden=tab!=='acc'; $('listRef').hidden=tab!=='ref'; $('listExt').hidden=tab!=='ext';
+});
+</script>
+</body>
+</html>
