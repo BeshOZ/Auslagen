@@ -32,7 +32,19 @@
   .gate p{font-size:14px;color:var(--muted);margin:0 0 16px}
   .banner{border:1px solid var(--gold);background:#FAF2E1;border-radius:4px;padding:11px 14px;font-size:13.5px;margin-bottom:18px}
 
-  .hero{border:1.5px solid var(--ink);border-radius:4px;padding:20px;margin-bottom:20px;background:var(--surface)}
+  .hero{border:1.5px solid var(--ink);border-radius:4px;padding:18px 20px;margin-bottom:20px;background:var(--surface)}
+  .heroRow{display:flex;gap:28px;flex-wrap:wrap}
+  .heroRow>div{min-width:130px}
+  .hlab{font-size:12.5px;color:var(--muted);display:block;margin-bottom:2px}
+  .big.alt{color:var(--gold)}
+  .sub{font-size:12.5px;color:var(--muted);margin-top:5px}
+  .sub b{font-family:var(--serif);font-size:15px;font-weight:400;color:var(--ink)}
+  .filter{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+  .filter input{font-family:inherit;font-size:13px;padding:6px 8px;border:1px solid var(--line);border-radius:3px;background:#fff;color:var(--ink)}
+  .sep{width:1px;height:20px;background:var(--line)}
+  .chip{border:1px solid var(--line);background:none;border-radius:20px;padding:5px 12px;font-size:13px;cursor:pointer;color:var(--muted);font-family:inherit}
+  .chip.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+  .chip.pay.on{background:var(--gold);border-color:var(--gold);color:#fff}
   .big{font-family:var(--serif);font-size:52px;line-height:1.05;color:var(--green)}
   .big.zero{color:var(--ink)}
   .cap{font-size:13.5px;color:var(--muted);margin-top:8px;max-width:46ch}
@@ -108,15 +120,30 @@
   <div class="langs" id="langsApp"></div>
   <div class="banner" id="viewerBanner" hidden></div>
 
+  <div class="filter">
+    <input type="date" id="from" aria-label="von"><input type="date" id="to" aria-label="bis">
+    <button class="chip" data-p="month"></button>
+    <button class="chip" data-p="all"></button>
+    <span class="sep"></span>
+    <button class="chip pay" data-s="unpaid"></button>
+    <button class="chip pay" data-s="paid"></button>
+    <button class="chip pay" data-s="allp"></button>
+  </div>
+
   <section class="hero">
-    <div class="big" id="total">€0,00</div>
-    <div class="cap" id="totalCap"></div>
-    <div class="split">
-      <div><span id="lSettled"></span><b id="sSettled">€0</b></div>
-      <div><span id="lOpenM"></span><b id="sOpenM">€0</b></div>
-      <div><span id="lDeals"></span><b id="sDeals">0</b></div>
-      <div><span id="lExtras"></span><b id="sExtras">€0</b></div>
+    <div class="heroRow">
+      <div>
+        <span class="hlab" id="hMargin"></span>
+        <div class="big" id="total">€0,00</div>
+        <div class="sub"><span id="mPaidL"></span> <b id="mPaid">€0</b> · <span id="mOpenL"></span> <b id="mOpen">€0</b></div>
+      </div>
+      <div>
+        <span class="hlab" id="hExtras"></span>
+        <div class="big alt" id="totalX">€0,00</div>
+        <div class="sub"><span id="xPaidL"></span> <b id="xPaid">€0</b> · <span id="xOpenL"></span> <b id="xOpen">€0</b></div>
+      </div>
     </div>
+    <div class="cap" id="totalCap"></div>
   </section>
 
   <div class="tabs">
@@ -167,8 +194,9 @@ const T = {
     gateIntro:'Trag deine E-Mail ein. Du bekommst einen Link zum Anmelden.',
     email:'E-Mail',sendLink:'Link schicken',linkSent:'Link ist unterwegs.',signout:'Abmelden',back:'Zum Buch',
     viewerBanner:'Du schlägst Preise vor. Angenommen oder abgelehnt entscheidet der Besitzer.',
-    total:'Marge angenommen',totalCap:'Summe aus angenommenen Vorschlägen minus deine Kosten. Getrennt vom Auslagenbuch.',
-    settled:'davon bezahlt',openM:'noch offen',deals:'Deals',extras:'Extras',
+    hMargin:'Marge',hExtras:'Extras',isPaid:'bezahlt',isOpen:'offen',
+    totalCap:'Marge = angenommene Vorschläge minus deine Kosten. Extras werden getrennt gezählt, nie verrechnet.',
+    thisMonth:'Dieser Monat',allTime:'Alles',fUnpaid:'Unbezahlt',fPaid:'Bezahlt',fAll:'Beides',
     tabNone:'Ohne Preis',tabPend:'Vorschläge',tabAcc:'Angenommen',tabRef:'Abgelehnt',tabExt:'Extras',
     cost:'Kosten',offered:'Vorschlag',margin:'Marge',
     propose:'Vorschlagen',revise:'Neuer Vorschlag',send:'Senden',
@@ -188,8 +216,9 @@ const T = {
     gateIntro:'Enter your email. You get a link to sign in.',
     email:'Email',sendLink:'Send link',linkSent:'Link sent.',signout:'Sign out',back:'To the ledger',
     viewerBanner:'You propose prices. Accepting or refusing is the owner’s call.',
-    total:'Margin accepted',totalCap:'Accepted offers minus your cost. Kept separate from the expenses ledger.',
-    settled:'of that paid',openM:'still open',deals:'Deals',extras:'Extras',
+    hMargin:'Margin',hExtras:'Extras',isPaid:'paid',isOpen:'open',
+    totalCap:'Margin = accepted offers minus your cost. Extras are counted separately, never netted off.',
+    thisMonth:'This month',allTime:'All time',fUnpaid:'Unpaid',fPaid:'Paid',fAll:'Both',
     tabNone:'No price yet',tabPend:'Offers',tabAcc:'Accepted',tabRef:'Refused',tabExt:'Extras',
     cost:'cost',offered:'offer',margin:'margin',
     propose:'Propose',revise:'New offer',send:'Send',
@@ -209,8 +238,9 @@ const T = {
     gateIntro:'أدخل بريدك الإلكتروني. سيصلك رابط لتسجيل الدخول.',
     email:'البريد الإلكتروني',sendLink:'أرسل الرابط',linkSent:'تم إرسال الرابط.',signout:'تسجيل الخروج',back:'إلى الدفتر',
     viewerBanner:'أنت تقترح الأسعار. القبول أو الرفض قرار المالك.',
-    total:'الهامش المقبول',totalCap:'العروض المقبولة ناقص تكلفتك. منفصل عن دفتر المصاريف.',
-    settled:'المدفوع منه',openM:'ما زال مفتوحاً',deals:'الصفقات',extras:'الإضافات',
+    hMargin:'الهامش',hExtras:'الإضافات',isPaid:'مدفوع',isOpen:'مفتوح',
+    totalCap:'الهامش = العروض المقبولة ناقص تكلفتك. الإضافات تُحسب منفصلة ولا تُخصم.',
+    thisMonth:'هذا الشهر',allTime:'كل الفترات',fUnpaid:'غير مدفوع',fPaid:'مدفوع',fAll:'الاثنان',
     tabNone:'بلا سعر',tabPend:'العروض',tabAcc:'مقبولة',tabRef:'مرفوضة',tabExt:'إضافات',
     cost:'التكلفة',offered:'العرض',margin:'الهامش',
     propose:'اقتراح',revise:'عرض جديد',send:'إرسال',
@@ -230,6 +260,10 @@ const t=k=>T[lang][k];
 
 const sb=createClient(SUPABASE_URL,SUPABASE_KEY);
 let buys=[],offers=[],extras=[],uid=null,ownerId=null,viewer=false,tab='none';
+let from='',to='',payFilter='unpaid';
+const dOf=r=>(r.date||r.created_at||'').slice(0,10);
+const inR=d=>(!from||d>=from)&&(!to||d<=to);
+const payOk=r=> payFilter==='allp' || (payFilter==='paid'? r.settled : !r.settled);
 
 const $=i=>document.getElementById(i);
 function fmt(n,d){try{return new Intl.NumberFormat(T[lang]._locale,{style:'currency',currency:'EUR',
@@ -256,7 +290,13 @@ function applyLang(){
   set('gTag',d.gateTag); set('gIntro',d.gateIntro); set('lEmail',d.email); set('loginBtn',d.sendLink);
   set('aTag',viewer?d.tagViewer:d.tag); set('out',d.signout); set('backLink',d.back);
   set('viewerBanner',d.viewerBanner); set('totalCap',d.totalCap);
-  set('lSettled',d.settled); set('lOpenM',d.openM); set('lDeals',d.deals); set('lExtras',d.extras);
+  set('hMargin',d.hMargin); set('hExtras',d.hExtras);
+  set('mPaidL',d.isPaid); set('mOpenL',d.isOpen); set('xPaidL',d.isPaid); set('xOpenL',d.isOpen);
+  document.querySelector('.chip[data-p="month"]').textContent=d.thisMonth;
+  document.querySelector('.chip[data-p="all"]').textContent=d.allTime;
+  document.querySelector('.chip[data-s="unpaid"]').textContent=d.fUnpaid;
+  document.querySelector('.chip[data-s="paid"]').textContent=d.fPaid;
+  document.querySelector('.chip[data-s="allp"]').textContent=d.fAll;
   set('tabNone',d.tabNone); set('tabAcc',d.tabAcc); set('tabRef',d.tabRef); set('tabExt',d.tabExt);
   set('shTitle',d.addExtra); set('lDate',d.date); set('lAmount',d.amount); set('lLabel',d.lbl);
   set('lNote',d.note); set('eSave',d.save); set('cancelBtn',d.cancel);
@@ -288,7 +328,10 @@ async function start(session){
   viewer=!!(sh&&sh.length); ownerId=viewer?sh[0].owner_id:uid;
   $('viewerBanner').hidden=!viewer; $('fab').hidden=viewer;
   $('e_date').value=today();
-  applyLang(); loadAll();
+  applyLang();
+  document.querySelector('.chip[data-p="month"]').classList.add('on'); setPeriod('month');
+  document.querySelector('.chip[data-s="unpaid"]').classList.add('on'); payFilter='unpaid';
+  loadAll();
 }
 
 async function loadAll(){
@@ -305,21 +348,27 @@ async function loadAll(){
 
 function render(){
   const d=T[lang];
-  const acc=offers.filter(o=>o.status==='accepted');
-  const pend=offers.filter(o=>o.status==='pending');
-  const ref=offers.filter(o=>o.status==='refused');
+  const accAll=offers.filter(o=>o.status==='accepted'&&inR(dOf(o)));
+  const acc=accAll.filter(payOk);
+  const pend=offers.filter(o=>o.status==='pending'&&inR(dOf(o)));
+  const ref=offers.filter(o=>o.status==='refused'&&inR(dOf(o)));
   const noOffer=buys.filter(b=>!offerOf(b));
+  const extAll=extras.filter(x=>inR(dOf(x)));
+  const ext=extAll.filter(payOk);
 
-  const totalM=acc.reduce((s,o)=>s+marginOf(o),0);
-  const settledM=acc.filter(o=>o.settled).reduce((s,o)=>s+marginOf(o),0);
-  const extrasTotal=extras.reduce((s,x)=>s+ +x.amount,0);
+  const sum=(a,f)=>a.reduce((s,o)=>s+f(o),0);
+  const mTotal=sum(acc,marginOf);
+  const mPaid=sum(accAll.filter(o=>o.settled),marginOf);
+  const mOpen=sum(accAll.filter(o=>!o.settled),marginOf);
+  const xTotal=sum(ext,x=>+x.amount);
+  const xPaid=sum(extAll.filter(x=>x.settled),x=>+x.amount);
+  const xOpen=sum(extAll.filter(x=>!x.settled),x=>+x.amount);
 
-  $('total').textContent=eur(totalM);
-  $('total').className='big'+(totalM===0?' zero':'');
-  $('sSettled').textContent=eur0(settledM);
-  $('sOpenM').textContent=eur0(totalM-settledM);
-  $('sDeals').textContent=acc.length;
-  $('sExtras').textContent=eur0(extrasTotal);
+  $('total').textContent=eur(mTotal);
+  $('total').className='big'+(mTotal===0?' zero':'');
+  $('totalX').textContent=eur(xTotal);
+  $('mPaid').textContent=eur0(mPaid); $('mOpen').textContent=eur0(mOpen);
+  $('xPaid').textContent=eur0(xPaid); $('xOpen').textContent=eur0(xOpen);
 
   $('tabPend').innerHTML=d.tabPend+(pend.length?'<span class="badge">'+pend.length+'</span>':'');
 
@@ -370,9 +419,12 @@ function render(){
   }).join('') : '<div class="empty">'+d.emptyRef+'</div>';
 
   /* extras */
-  $('listExt').innerHTML = extras.length ? extras.map(x=>
+  $('listExt').innerHTML = ext.length ? ext.map(x=>
     '<div class="row"><div class="b"><div class="t">'+esc(x.label)+'</div>'
-    +'<div class="s">'+x.date+(x.note?' · '+esc(x.note):'')+'</div></div>'
+    +'<div class="s">'+x.date+(x.note?' · '+esc(x.note):'')+'</div>'
+    +'<div class="tags">'+(x.settled?'<span class="tag ok">'+d.paid+'</span>':'<span class="tag wait">'+d.isOpen+'</span>')
+    +(viewer?'':'<button class="act sec" data-xpay="'+x.id+'" data-v="'+(x.settled?'0':'1')+'">'
+      +(x.settled?d.unpaid:d.markPaid)+'</button>')+'</div></div>'
     +'<div class="amt">'+eur(+x.amount)+'</div>'
     +(viewer?'':'<button class="del" data-del="'+x.id+'">×</button>')+'</div>'
   ).join('') : '<div class="empty">'+d.emptyExt+'</div>';
@@ -382,6 +434,7 @@ function render(){
   document.querySelectorAll('[data-acc]').forEach(b=>b.onclick=()=>decide(b.dataset.acc,'accepted'));
   document.querySelectorAll('[data-ref]').forEach(b=>b.onclick=()=>decide(b.dataset.ref,'refused'));
   document.querySelectorAll('[data-pay]').forEach(b=>b.onclick=()=>setPaid(b.dataset.pay,b.dataset.v==='1'));
+  document.querySelectorAll('[data-xpay]').forEach(b=>b.onclick=()=>setExtraPaid(b.dataset.xpay,b.dataset.v==='1'));
   document.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>delExtra(b.dataset.del));
 }
 
@@ -409,6 +462,11 @@ async function setPaid(offerId,val){
   if(error) return say(t('errSave')+error.message,true);
   await loadAll(); say(t('saved'));
 }
+async function setExtraPaid(id,val){
+  const {error}=await sb.from('extras').update({settled:val}).eq('id',id);
+  if(error) return say(t('errSave')+error.message,true);
+  await loadAll(); say(t('saved'));
+}
 async function delExtra(id){
   if(!confirm(t('confirmDel'))) return;
   const {error}=await sb.from('extras').delete().eq('id',id);
@@ -428,6 +486,23 @@ $('fExtra').onsubmit=async e=>{
   $('fExtra').reset(); $('e_date').value=today();
   $('sheet').classList.remove('on'); await loadAll(); say(t('saved'));
 };
+
+function setPeriod(which){
+  const n=new Date(), iso=x=>x.toISOString().slice(0,10);
+  if(which==='month'){ from=iso(new Date(n.getFullYear(),n.getMonth(),1)); to=iso(n); }
+  else { from=''; to=''; }
+  $('from').value=from; $('to').value=to;
+}
+document.querySelectorAll('.chip[data-p]').forEach(c=>c.onclick=()=>{
+  document.querySelectorAll('.chip[data-p]').forEach(x=>x.classList.toggle('on',x===c));
+  setPeriod(c.dataset.p); if(uid) render();
+});
+document.querySelectorAll('.chip[data-s]').forEach(c=>c.onclick=()=>{
+  document.querySelectorAll('.chip[data-s]').forEach(x=>x.classList.toggle('on',x===c));
+  payFilter=c.dataset.s; if(uid) render();
+});
+$('from').onchange=e=>{from=e.target.value; document.querySelectorAll('.chip[data-p]').forEach(x=>x.classList.remove('on')); render()};
+$('to').onchange  =e=>{to  =e.target.value; document.querySelectorAll('.chip[data-p]').forEach(x=>x.classList.remove('on')); render()};
 
 document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
   tab=b.dataset.t;
