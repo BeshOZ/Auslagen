@@ -1,20 +1,17 @@
 name: Build Android APK
 
-# Wraps the PWA in a Trusted Web Activity and produces an installable APK.
-# Runs entirely on GitHub's machines — nothing to install on your phone.
-#
-# FIRST RUN: leave the secrets unset. The job generates a keystore, prints the
-# SHA-256 fingerprint, and uploads keystore.jks as an artifact. Download it,
-# then follow the steps printed in the log to store it as a secret so every
-# later build is signed with the same key. Losing that key means never being
-# able to update an installed app again.
-
 on:
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    env:
+      SITE: https://beshoz.github.io/Auslagen
+      PKG: de.auslagen.app
+      KS_PASS: ${{ secrets.KEYSTORE_PASSWORD || 'auslagen' }}
+
     steps:
       - uses: actions/checkout@v4
 
@@ -32,75 +29,106 @@ jobs:
 
       - name: Restore or create keystore
         id: keys
-        env:
-          KEYSTORE_B64: ${{ secrets.KEYSTORE_B64 }}
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
         run: |
           set -e
-          if [ -n "$KEYSTORE_B64" ]; then
-            echo "$KEYSTORE_B64" | base64 -d > keystore.jks
-            echo "created=false" >> $GITHUB_OUTPUT
+          if [ -n "${{ secrets.KEYSTORE_B64 }}" ]; then
+            echo "${{ secrets.KEYSTORE_B64 }}" | base64 -d > "$GITHUB_WORKSPACE/keystore.jks"
+            echo "created=false" >> "$GITHUB_OUTPUT"
           else
-            PASS="${KEYSTORE_PASSWORD:-auslagen}"
-            keytool -genkeypair -v -keystore keystore.jks -alias android \
-              -keyalg RSA -keysize 2048 -validity 10000 \
-              -storepass "$PASS" -keypass "$PASS" \
+            keytool -genkeypair -v \
+              -keystore "$GITHUB_WORKSPACE/keystore.jks" \
+              -alias android -keyalg RSA -keysize 2048 -validity 10000 \
+              -storepass "$KS_PASS" -keypass "$KS_PASS" \
               -dname "CN=Auslagen, OU=personal, O=personal, L=Nuernberg, C=DE"
-            echo "created=true" >> $GITHUB_OUTPUT
+            echo "created=true" >> "$GITHUB_OUTPUT"
           fi
-          keytool -list -v -keystore keystore.jks \
-            -storepass "${KEYSTORE_PASSWORD:-auslagen}" -alias android \
-            | grep "SHA256:" | head -1 | tee fingerprint.txt
+          keytool -list -v -keystore "$GITHUB_WORKSPACE/keystore.jks" \
+            -storepass "$KS_PASS" -alias android \
+            | grep "SHA256:" | head -1 > "$GITHUB_WORKSPACE/fingerprint.txt"
+          cat "$GITHUB_WORKSPACE/fingerprint.txt"
 
-      - name: Initialise TWA project
-        env:
-          MANIFEST_URL: https://beshoz.github.io/Auslagen/manifest.json
+      - name: Write TWA manifest
         run: |
-          mkdir -p twa && cd twa
-          bubblewrap init --manifest "$MANIFEST_URL" \
-            --packageId de.auslagen.app \
-            --directory . <<'ANSWERS' || true
-ANSWERS
+          mkdir -p twa
+          cat > twa/twa-manifest.json << 'EOF'
+          {
+            "packageId": "de.auslagen.app",
+            "host": "beshoz.github.io",
+            "name": "Auslagen",
+            "launcherName": "Auslagen",
+            "display": "standalone",
+            "orientation": "portrait",
+            "themeColor": "#0E1412",
+            "themeColorDark": "#0E1412",
+            "navigationColor": "#0E1412",
+            "navigationColorDark": "#0E1412",
+            "navigationDividerColor": "#0E1412",
+            "navigationDividerColorDark": "#0E1412",
+            "backgroundColor": "#0E1412",
+            "enableNotifications": true,
+            "startUrl": "/Auslagen/index.html",
+            "iconUrl": "https://beshoz.github.io/Auslagen/icon-512.png",
+            "maskableIconUrl": "https://beshoz.github.io/Auslagen/icon-maskable-512.png",
+            "splashScreenFadeOutDuration": 300,
+            "appVersionName": "1.0.0",
+            "appVersionCode": 1,
+            "shortcuts": [],
+            "generatorApp": "bubblewrap-cli",
+            "webManifestUrl": "https://beshoz.github.io/Auslagen/manifest.json",
+            "fallbackType": "customtabs",
+            "features": {},
+            "alphaDependencies": { "enabled": false },
+            "enableSiteSettingsShortcut": true,
+            "isChromeOSOnly": false,
+            "isMetaQuest": false,
+            "fullScopeUrl": "https://beshoz.github.io/Auslagen/",
+            "minSdkVersion": 23,
+            "signingKey": {
+              "path": "KEYSTORE_PATH",
+              "alias": "android"
+            }
+          }
+          EOF
+          sed -i "s|KEYSTORE_PATH|$GITHUB_WORKSPACE/keystore.jks|" twa/twa-manifest.json
+          cat twa/twa-manifest.json
 
       - name: Build APK
         working-directory: twa
         env:
-          PASS: ${{ secrets.KEYSTORE_PASSWORD }}
-        run: |
-          bubblewrap build --skipPwaValidation \
-            --signingKeyPath ../keystore.jks \
-            --signingKeyAlias android <<EOF || bubblewrap build --skipPwaValidation
-${PASS:-auslagen}
-${PASS:-auslagen}
-EOF
+          BUBBLEWRAP_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD || 'auslagen' }}
+          BUBBLEWRAP_KEY_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD || 'auslagen' }}
+        run: bubblewrap build --skipPwaValidation
 
       - name: Collect outputs
+        if: always()
         run: |
           mkdir -p out
           find . -name "*.apk" -exec cp {} out/ \; || true
-          cp fingerprint.txt out/ || true
-          if [ "${{ steps.keys.outputs.created }}" = "true" ]; then cp keystore.jks out/; fi
+          find . -name "*.aab" -exec cp {} out/ \; || true
+          cp "$GITHUB_WORKSPACE/fingerprint.txt" out/ || true
+          if [ "${{ steps.keys.outputs.created }}" = "true" ]; then
+            cp "$GITHUB_WORKSPACE/keystore.jks" out/
+          fi
           ls -la out
 
-      - name: Print next steps
+      - name: Next steps
+        if: always()
         run: |
           echo "=============================================="
-          cat fingerprint.txt || true
+          cat "$GITHUB_WORKSPACE/fingerprint.txt" || true
           echo ""
-          echo "Put the SHA-256 above into .well-known/assetlinks.json"
-          echo "at the ROOT of beshoz.github.io, or the app will show a URL bar."
-          echo ""
+          echo "Put that SHA-256 into .well-known/assetlinks.json at the root"
+          echo "of beshoz.github.io, or the app shows a URL bar."
           if [ "${{ steps.keys.outputs.created }}" = "true" ]; then
-            echo "A NEW keystore was generated and is in the artifact."
-            echo "Download it, then run on any machine:"
-            echo "   base64 -w0 keystore.jks"
-            echo "and save the output as the repo secret KEYSTORE_B64,"
-            echo "plus KEYSTORE_PASSWORD (default used: auslagen)."
-            echo "Without this, the next build cannot update this app."
+            echo ""
+            echo "A NEW keystore is in the artifact. Back it up, then save it as"
+            echo "repo secrets KEYSTORE_B64 (base64 of the file) and KEYSTORE_PASSWORD."
+            echo "Without it you can never update an installed copy."
           fi
           echo "=============================================="
 
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: auslagen-android
           path: out/
