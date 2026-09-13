@@ -317,6 +317,7 @@ const T = {
   errLoad:'Konnte nicht laden: ',errSave:'Nicht gespeichert: ',errDel:'Nicht gelöscht: ',
   errImg:'Bild nicht hochgeladen: ',errImgFind:'Bild nicht gefunden.',errLogin:'Hat nicht geklappt: ',
   notifyOn:'Benachrichtigungen an',nNewReq:'Neuer Wunsch',nNewBuy:'Neuer Einkauf',nDecided:'Wunsch beantwortet',
+  nShip:'Neuer Versand',nStatus:'Status geändert',
   st:{ordered:'Bestellt',shipped:'Unterwegs',arrived:'Angekommen',handed:'Übergeben',delivered:'Beim Freund'}},
 
  en:{_n:'EN',_l:'en-GB',_d:'ltr',
@@ -357,6 +358,7 @@ const T = {
   errLoad:'Could not load: ',errSave:'Not saved: ',errDel:'Not deleted: ',
   errImg:'Image not uploaded: ',errImgFind:'Image not found.',errLogin:'That did not work: ',
   notifyOn:'Notifications on',nNewReq:'New request',nNewBuy:'New purchase',nDecided:'Request answered',
+  nShip:'New shipment',nStatus:'Status changed',
   st:{ordered:'Ordered',shipped:'In transit',arrived:'Arrived',handed:'Handed over',delivered:'With him'}},
 
  ar:{_n:'ع',_l:'ar-u-nu-latn',_d:'rtl',
@@ -397,6 +399,7 @@ const T = {
   errLoad:'تعذّر التحميل: ',errSave:'لم يُحفظ: ',errDel:'لم يُحذف: ',
   errImg:'لم تُرفع الصورة: ',errImgFind:'الصورة غير موجودة.',errLogin:'لم ينجح الأمر: ',
   notifyOn:'التنبيهات مفعّلة',nNewReq:'طلب جديد',nNewBuy:'شراء جديد',nDecided:'تم الرد على الطلب',
+  nShip:'شحنة جديدة',nStatus:'تغيّرت الحالة',
   st:{ordered:'تم الطلب',shipped:'في الطريق',arrived:'وصل',handed:'تم التسليم',delivered:'عند صديقي'}}
 };
 const LANGS=['de','en','ar'], STATUSES=['ordered','shipped','arrived','handed','delivered'];
@@ -810,8 +813,15 @@ function watch(){
       if(viewer&&r.requested_by===uid&&o.approval==='pending'&&r.approval!=='pending')
         ping(t('nDecided'),r.item||'');
       if(viewer&&o.paid==null&&r.paid!=null) ping(t('nNewBuy'),r.item||'');
+      if(viewer&&o.status&&r.status&&o.status!==r.status)
+        ping(t('nStatus'),(r.item||'')+' · '+(T[lang].st[r.status]||r.status));
       loadAll();
     })
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'deliveries'},p=>{
+      if(viewer) ping(t('nShip'),p.new.destination||'');
+      loadAll();
+    })
+    .on('postgres_changes',{event:'UPDATE',schema:'public',table:'deliveries'},()=>loadAll())
     .subscribe();
 }
 
