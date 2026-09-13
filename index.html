@@ -2,268 +2,275 @@
 <html lang="de" dir="ltr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Auslagen</title>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#0E1412">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="icon" href="./icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Karla:wght@400;500;700&family=Noto+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#1B2420; --paper:#EDEFEA; --surface:#F7F8F4; --line:#C9CFC6;
-    --muted:#68746C; --amber:#C0842A; --alert:#9E3423; --green:#3F6B4E;
-    --sans:"Karla","Noto Sans Arabic",-apple-system,BlinkMacSystemFont,sans-serif;
-    --serif:"Instrument Serif","Noto Sans Arabic",Georgia,serif;
+    --bg:#0E1412; --card:#18211D; --card2:#1C2621; --line:#242E29;
+    --txt:#E8EDE9; --dim:#7C8A84; --lime:#D7F25B; --limeInk:#141E06;
+    --amberBg:#3A3118; --amberTx:#E8C86A;
+    --greenBg:#1B3327; --greenTx:#8FD9AC;
+    --redBg:#3A1E1B;  --redTx:#F0A79B;
+    --sans:"Manrope","Noto Sans Arabic",-apple-system,BlinkMacSystemFont,sans-serif;
   }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
-  [dir=rtl] body{font-family:"Noto Sans Arabic","Karla",sans-serif}
-  [dir=rtl] .big,[dir=rtl] .split b,[dir=rtl] .row .d,[dir=rtl] .row .amt{font-family:"Noto Sans Arabic",var(--serif)}
-  .wrap{max-width:760px;margin:0 auto;padding:24px 18px 120px}
-  h1{font-family:var(--serif);font-size:28px;font-weight:400;margin:0}
-  [dir=rtl] h1{font-family:"Noto Sans Arabic",var(--serif);font-weight:500;font-size:24px}
-  h1 span{display:block;font-family:var(--sans);font-size:13px;color:var(--muted);margin-top:2px;font-weight:400}
-  .top{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:16px}
-  .who{font-size:12.5px;color:var(--muted);text-align:end}
-  .who button{display:block;margin-inline-start:auto;margin-top:3px;background:none;border:none;color:var(--muted);text-decoration:underline;cursor:pointer;font-family:inherit;font-size:12.5px;padding:0}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;background:var(--bg);color:var(--txt);font-family:var(--sans);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:620px;margin:0 auto;padding:14px 16px 110px}
 
-  .langs{display:flex;border:1px solid var(--line);border-radius:20px;overflow:hidden;width:fit-content;margin-bottom:20px}
-  .langs button{font-family:inherit;font-size:12.5px;padding:5px 13px;background:none;border:none;cursor:pointer;color:var(--muted)}
-  .langs button.on{background:var(--ink);color:var(--paper)}
+  .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+  .kicker{font-size:10.5px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase}
+  .hello{font-size:15px;margin-top:2px}
+  .icons{display:flex;gap:8px}
+  .ibtn{width:36px;height:36px;border-radius:18px;background:var(--card2);border:none;color:var(--txt);font-size:15px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .ibtn.on{background:var(--lime);color:var(--limeInk)}
 
-  .gate{max-width:420px;margin:12vh auto;padding:0 20px}
-  .gate p{font-size:14px;color:var(--muted);margin:0 0 16px;max-width:42ch}
-  .banner{border:1px solid var(--amber);background:#FBF3E3;border-radius:4px;padding:11px 14px;font-size:13.5px;margin-bottom:18px}
+  .langs{display:flex;gap:4px;margin-bottom:14px}
+  .langs button{font-family:inherit;font-size:11.5px;padding:5px 12px;border-radius:20px;background:var(--card);border:none;color:var(--dim);cursor:pointer}
+  .langs button.on{background:var(--lime);color:var(--limeInk);font-weight:600}
 
-  .balance{border:1.5px solid var(--ink);border-radius:4px;padding:20px;margin-bottom:14px;background:var(--surface)}
-  .big{font-family:var(--serif);font-size:54px;line-height:1.05}
-  .big.neg{color:var(--alert)}
-  .cap{font-size:13.5px;color:var(--muted);margin-top:8px;max-width:46ch}
-  .split{display:flex;gap:24px;margin-top:18px;padding-top:14px;border-top:1px solid var(--line);flex-wrap:wrap}
-  .split>div{font-size:13px;color:var(--muted)}
-  .split b{display:block;font-family:var(--serif);font-size:22px;font-weight:400;color:var(--ink)}
-  .split b.in{color:var(--green)}
+  .banner{background:var(--amberBg);color:var(--amberTx);border-radius:14px;padding:11px 14px;font-size:12.5px;margin-bottom:14px}
 
-  .filter{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:20px;font-size:13px;color:var(--muted)}
-  .filter input{font-family:inherit;font-size:13.5px;padding:6px 8px;border:1px solid var(--line);border-radius:3px;background:#fff;color:var(--ink)}
-  .chip{border:1px solid var(--line);background:none;border-radius:20px;padding:5px 12px;font-size:13px;cursor:pointer;color:var(--muted);font-family:inherit}
-  .chip.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+  .hero{background:var(--lime);border-radius:22px;padding:18px}
+  .hero .lab{font-size:11px;color:#3C4A12}
+  .hero .amt{font-size:40px;color:var(--limeInk);line-height:1.1;letter-spacing:-.02em;margin-top:2px;font-weight:600}
+  .hero .amt small{font-size:22px;font-weight:500}
+  .hero .grid{display:flex;gap:8px;margin-top:14px}
+  .hero .grid div{flex:1;background:rgba(20,30,6,.10);border-radius:13px;padding:9px 11px}
+  .hero .grid span{display:block;font-size:9.5px;color:#3C4A12}
+  .hero .grid b{font-size:15px;color:var(--limeInk);font-weight:600}
 
-  .strip{display:flex;align-items:center;gap:12px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:12px 0;margin-bottom:22px;font-size:13.5px;color:var(--muted)}
-  .track{flex:1;height:6px;background:#DDE1D9;border-radius:3px;overflow:hidden;min-width:60px}
-  .track i{display:block;height:100%;background:var(--amber);transition:width .4s ease}
-  .track.over i{background:var(--alert)}
+  .secrow{display:flex;justify-content:space-between;align-items:center;margin:20px 2px 10px}
+  .secrow h2{font-size:15px;margin:0;font-weight:600}
+  .filters{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 12px}
+  .chip{border:none;background:var(--card);border-radius:20px;padding:6px 13px;font-size:11.5px;color:var(--dim);font-family:inherit;cursor:pointer}
+  .chip.on{background:var(--card2);color:var(--txt)}
+  .dates{display:flex;gap:6px;margin-bottom:12px}
+  .dates input{flex:1;font-family:inherit;font-size:12px;padding:8px 10px;border-radius:12px;border:none;background:var(--card);color:var(--txt)}
 
-  .tabs{display:flex;border-bottom:1.5px solid var(--line);margin-bottom:6px;overflow-x:auto;scrollbar-width:none}
-  .tabs::-webkit-scrollbar{display:none}
-  .tab{font-family:inherit;font-size:14.5px;background:none;border:none;padding:9px 13px;cursor:pointer;color:var(--muted);border-bottom:2.5px solid transparent;margin-bottom:-1.5px;white-space:nowrap}
-  .tab.on{color:var(--ink);font-weight:500;border-bottom-color:var(--ink)}
-  .badge{display:inline-block;min-width:18px;padding:0 5px;margin-inline-start:5px;border-radius:9px;background:var(--amber);color:#fff;font-size:11.5px;line-height:18px;text-align:center;vertical-align:1px}
+  .item{background:var(--card);border-radius:18px;padding:13px;display:flex;gap:12px;align-items:center;margin-bottom:9px;cursor:pointer}
+  .tile{width:40px;height:40px;border-radius:13px;background:var(--card2);color:var(--lime);display:flex;align-items:center;justify-content:center;flex:none;font-size:17px;font-weight:600}
+  .mid{flex:1;min-width:0}
+  .nm{font-size:13.5px;font-weight:500;word-break:break-word}
+  .sub{font-size:10.5px;color:var(--dim);margin-top:3px;word-break:break-word}
+  .pill{display:inline-block;margin-top:7px;margin-right:5px;border-radius:20px;padding:3px 10px;font-size:9.5px;background:var(--card2);color:var(--dim)}
+  .pill.w{background:var(--amberBg);color:var(--amberTx)}
+  .pill.g{background:var(--greenBg);color:var(--greenTx)}
+  .pill.r{background:var(--redBg);color:var(--redTx)}
+  .pill.l{background:var(--lime);color:var(--limeInk);font-weight:600}
+  .val{font-size:15px;font-weight:600;text-align:end;flex:none}
+  .val.in{color:var(--lime)}
+  .acts{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}
+  .act{font-family:inherit;font-size:11.5px;border-radius:20px;padding:6px 13px;border:none;cursor:pointer;background:var(--lime);color:var(--limeInk);font-weight:600}
+  .act.ghost{background:var(--card2);color:var(--txt);font-weight:400}
+  .act.bad{background:var(--redBg);color:var(--redTx)}
+  .mono{font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:embed}
 
-  h2{font-size:12.5px;font-weight:700;margin:20px 0 4px;color:var(--muted)}
-  .row{display:flex;gap:11px;padding:13px 0;border-bottom:1px solid var(--line);align-items:flex-start}
-  .row .d{font-family:var(--serif);font-size:15px;color:var(--muted);flex:none;width:50px;padding-top:2px}
-  .row .b{flex:1;min-width:0}
-  .row .t{font-weight:500;word-break:break-word}
-  .row .s{font-size:13px;color:var(--muted);margin-top:2px;word-break:break-word}
-  .row .amt{font-family:var(--serif);font-size:19px;flex:none;text-align:end;min-width:74px}
-  .row .amt small{display:block;font-family:var(--sans);font-size:11px;color:var(--muted);line-height:1.4}
-  .row .amt.in{color:var(--green)}
-  .row .amt.q{color:var(--muted);font-size:17px}
-  .row.pend{background:#FBF6EC;margin-inline:-8px;padding-inline:8px;border-radius:3px}
-  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;align-items:center}
-  .tag{font-size:12px;border:1px solid var(--line);border-radius:3px;padding:2px 7px;color:var(--muted);background:#fff;text-decoration:none;cursor:pointer;font-family:inherit}
-  .tag.st{border-color:var(--amber);color:#8A5E18}
-  .tag.st.done{border-color:var(--green);color:var(--green)}
-  .tag.code{direction:ltr;unicode-bidi:embed}
-  .tag.no{border-color:var(--alert);color:var(--alert)}
-  .act{font-size:12.5px;font-family:inherit;border-radius:3px;padding:4px 10px;cursor:pointer;border:1px solid var(--ink);background:var(--ink);color:var(--paper)}
-  .act.sec{background:none;color:var(--ink)}
-  .act.no{background:none;color:var(--alert);border-color:var(--alert)}
-  select.mini{width:auto;font-size:12.5px;padding:3px 6px;font-family:inherit;border:1px solid var(--line);border-radius:3px;background:#fff;color:var(--ink)}
-  .del{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:0 2px}
-  .empty{border:1px dashed var(--line);border-radius:4px;padding:26px;text-align:center;color:var(--muted);font-size:14.5px;margin-top:14px}
-  .bar{display:flex;gap:9px;margin-top:24px;flex-wrap:wrap}
-  .ghost{font-family:inherit;font-size:14px;background:none;color:var(--ink);border:1px solid var(--line);border-radius:3px;padding:8px 14px;cursor:pointer}
-  .status{font-size:13px;color:var(--muted);margin-top:12px;min-height:19px}
-  .status.err{color:var(--alert)}
+  .empty{border:1px dashed var(--line);border-radius:18px;padding:28px 20px;text-align:center;color:var(--dim);font-size:13px}
+  .month{font-size:10.5px;color:var(--dim);margin:16px 2px 8px;letter-spacing:.04em}
+  .note{font-size:12px;color:var(--dim);margin-top:12px;min-height:18px}
+  .note.err{color:var(--redTx)}
 
-  /* add button + sheet */
-  .fab{position:fixed;inset-inline-end:20px;bottom:24px;width:56px;height:56px;border-radius:28px;border:none;
-       background:var(--ink);color:var(--paper);font-size:30px;line-height:1;cursor:pointer;z-index:5;
-       box-shadow:0 3px 14px rgba(27,36,32,.28)}
-  .sheet{position:fixed;inset:0;background:rgba(27,36,32,.5);display:none;z-index:10;align-items:flex-end;justify-content:center}
+  nav{position:fixed;left:0;right:0;bottom:0;background:#121A17;border-top:1px solid var(--line);
+      display:flex;justify-content:space-around;align-items:center;padding:9px 4px calc(12px + env(safe-area-inset-bottom));z-index:6}
+  nav button{background:none;border:none;color:var(--dim);font-family:inherit;font-size:9.5px;cursor:pointer;
+             display:flex;flex-direction:column;align-items:center;gap:3px;padding:2px 6px;position:relative;min-width:52px}
+  nav button.on{color:var(--lime)}
+  nav .ico{font-size:19px;line-height:1}
+  nav .fab{width:46px;height:46px;border-radius:23px;background:var(--lime);color:var(--limeInk);font-size:24px;
+           display:flex;align-items:center;justify-content:center;border:none;cursor:pointer}
+  nav .dot{position:absolute;top:-2px;right:4px;min-width:16px;height:16px;border-radius:8px;background:var(--lime);
+           color:var(--limeInk);font-size:9px;line-height:16px;font-weight:700;padding:0 4px}
+
+  .sheet{position:fixed;inset:0;background:rgba(6,10,9,.72);display:none;z-index:20;align-items:flex-end;justify-content:center}
   .sheet.on{display:flex}
-  .card{background:var(--paper);width:100%;max-width:640px;max-height:92vh;overflow-y:auto;
-        border-radius:14px 14px 0 0;padding:20px 18px 32px}
-  .card h3{font-family:var(--serif);font-size:23px;font-weight:400;margin:0 0 4px}
-  [dir=rtl] .card h3{font-family:"Noto Sans Arabic",var(--serif);font-weight:500;font-size:20px}
-  .card .sub{font-size:13px;color:var(--muted);margin:0 0 16px}
+  .card{background:var(--bg);width:100%;max-width:620px;max-height:92vh;overflow-y:auto;border-radius:24px 24px 0 0;
+        padding:18px 16px calc(28px + env(safe-area-inset-bottom));border-top:1px solid var(--line)}
+  .grab{width:38px;height:4px;border-radius:2px;background:var(--line);margin:0 auto 14px}
+  .card h3{font-size:18px;margin:0 0 14px;font-weight:600}
   .pick{display:flex;flex-direction:column;gap:9px}
-  .pick button{font-family:inherit;font-size:15.5px;text-align:start;padding:14px 16px;border:1px solid var(--line);
-               background:var(--surface);border-radius:5px;cursor:pointer;color:var(--ink)}
-  .pick button small{display:block;font-size:12.5px;color:var(--muted);margin-top:1px}
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+  .pick button{font-family:inherit;font-size:14.5px;text-align:start;padding:15px 16px;border:none;background:var(--card);
+               border-radius:16px;cursor:pointer;color:var(--txt);display:flex;gap:12px;align-items:center}
+  .pick button i{width:38px;height:38px;border-radius:12px;background:var(--card2);color:var(--lime);display:flex;
+                 align-items:center;justify-content:center;flex:none;font-style:normal;font-size:17px}
+  .pick small{display:block;font-size:11.5px;color:var(--dim);margin-top:1px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .full{grid-column:1/-1}
-  label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:3px}
-  input,textarea,select{width:100%;font-family:inherit;font-size:16px;padding:9px 10px;border:1px solid var(--line);border-radius:3px;background:#fff;color:var(--ink)}
-  textarea{resize:vertical;min-height:44px}
-  input[type=file]{font-size:13px;padding:6px;background:none;border-style:dashed}
+  label{display:block;font-size:11px;color:var(--dim);margin-bottom:4px}
+  input,textarea,select{width:100%;font-family:inherit;font-size:16px;padding:12px;border:none;border-radius:13px;
+                        background:var(--card);color:var(--txt)}
+  textarea{resize:vertical;min-height:52px}
+  select{appearance:none}
+  input[type=file]{font-size:12px;padding:11px;background:var(--card);color:var(--dim)}
   input[type=url],input[type=email],input[type=number]{direction:ltr;text-align:start}
-  button.go{font-family:inherit;font-size:15px;font-weight:500;cursor:pointer;border:1px solid var(--ink);border-radius:3px;padding:11px 18px;background:var(--ink);color:var(--paper)}
-  button.go[disabled]{opacity:.5}
-  .cancel{background:none;border:none;color:var(--muted);font-family:inherit;font-size:14px;text-decoration:underline;cursor:pointer;padding:10px 4px}
-  :focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+  input:focus,textarea:focus,select:focus{outline:2px solid var(--lime);outline-offset:-2px}
+  .go{width:100%;font-family:inherit;font-size:15px;font-weight:600;padding:14px;border:none;border-radius:14px;
+      background:var(--lime);color:var(--limeInk);cursor:pointer;margin-top:4px}
+  .go[disabled]{opacity:.5}
+  .ghostbtn{width:100%;background:none;border:none;color:var(--dim);font-family:inherit;font-size:13px;padding:12px;cursor:pointer}
+  .danger{width:100%;background:var(--redBg);border:none;color:var(--redTx);font-family:inherit;font-size:13px;
+          padding:12px;border-radius:13px;cursor:pointer;margin-top:8px}
 
-  .modal{position:fixed;inset:0;background:rgba(27,36,32,.85);display:none;align-items:center;justify-content:center;padding:20px;z-index:11}
-  .modal.on{display:flex}
-  .modal img{max-width:100%;max-height:86vh;border-radius:4px}
-  .modal button{position:absolute;top:14px;inset-inline-end:18px;background:none;border:none;color:#fff;font-size:30px;cursor:pointer}
+  .gate{max-width:380px;margin:14vh auto;padding:0 22px}
+  .gate h1{font-size:30px;margin:0 0 6px;font-weight:700;letter-spacing:-.02em}
+  .gate p{font-size:13.5px;color:var(--dim);margin:0 0 18px}
 
-  @media (max-width:520px){.grid{grid-template-columns:1fr}.big{font-size:42px}}
-  @media (prefers-reduced-motion:reduce){.track i{transition:none}}
+  .viewer{position:fixed;inset:0;background:rgba(6,10,9,.9);display:none;align-items:center;justify-content:center;padding:18px;z-index:30}
+  .viewer.on{display:flex}
+  .viewer img{max-width:100%;max-height:85vh;border-radius:16px}
+  .viewer button{position:absolute;top:16px;inset-inline-end:18px;background:none;border:none;color:#fff;font-size:30px;cursor:pointer}
+  [dir=rtl] body{font-family:"Noto Sans Arabic","Manrope",sans-serif}
 </style>
 </head>
 <body>
 
 <div class="gate" id="gate" hidden>
   <div class="langs" id="langsGate"></div>
-  <h1>Auslagen<span id="gTag"></span></h1>
+  <h1>Auslagen</h1>
   <p id="gIntro"></p>
   <form id="fLogin">
     <label for="email" id="lEmail"></label>
     <input id="email" type="email" required autocomplete="email" placeholder="name@mail.com">
-    <div style="margin-top:12px"><button class="go" type="submit" id="loginBtn"></button></div>
+    <button class="go" type="submit" id="loginBtn" style="margin-top:12px"></button>
   </form>
-  <div class="status" id="gateStatus" role="status"></div>
+  <div class="note" id="gateNote" role="status"></div>
 </div>
 
 <div class="wrap" id="app" hidden>
-  <div class="top">
-    <h1>Auslagen<span id="aTag"></span></h1>
-    <div class="who"><span id="me"></span><button id="out"></button></div>
+  <div class="head">
+    <div>
+      <div class="kicker" id="kicker"></div>
+      <div class="hello" id="me"></div>
+    </div>
+    <div class="icons">
+      <button class="ibtn" id="bell" aria-label="bell">&#9679;</button>
+      <button class="ibtn" id="out" aria-label="out">&#8594;</button>
+    </div>
   </div>
 
   <div class="langs" id="langsApp"></div>
   <div class="banner" id="viewerBanner" hidden></div>
 
-  <section class="balance">
-    <div class="big" id="bal">€0,00</div>
-    <div class="cap" id="balcap"></div>
-    <div class="split">
-      <div><span id="lIn"></span><b class="in" id="sIn">€0</b></div>
+  <section class="hero">
+    <div class="lab" id="heroLab"></div>
+    <div class="amt" id="bal">€0</div>
+    <div class="grid">
+      <div><span id="lIn"></span><b id="sIn">€0</b></div>
       <div><span id="lOut"></span><b id="sOut">€0</b></div>
-      <div><span id="lN"></span><b id="sN">0</b></div>
-      <div><span id="lOpen"></span><b id="sOpen">0</b></div>
     </div>
   </section>
 
-  <div class="filter">
-    <span id="lPeriod"></span>
-    <input type="date" id="from"><input type="date" id="to">
-    <button class="chip" data-r="year"></button>
+  <div class="secrow"><h2 id="secTitle"></h2></div>
+  <div class="filters">
+    <button class="chip on" data-r="year"></button>
     <button class="chip" data-r="30"></button>
     <button class="chip" data-r="all"></button>
   </div>
+  <div class="dates"><input type="date" id="from"><input type="date" id="to"></div>
 
-  <div class="strip" id="tipStrip">
-    <span><span id="lTip"></span> <span id="tipY"></span></span>
-    <div class="track" id="track"><i id="tipbar" style="width:0"></i></div>
-    <span id="tiptxt"></span>
-  </div>
-
-  <div class="tabs">
-    <button class="tab on" data-t="req" id="tabReq"></button>
-    <button class="tab" data-t="buy" id="tabBuy"></button>
-    <button class="tab" data-t="dlv" id="tabDlv"></button>
-    <button class="tab" data-t="tr"  id="tabTr"></button>
-  </div>
-
-  <div id="listReq"></div>
-  <div id="listBuy" hidden></div>
-  <div id="listDlv" hidden></div>
-  <div id="listTr"  hidden></div>
-
-  <div class="bar"><button class="ghost" id="csv"></button></div>
-  <div class="status" id="status" role="status"></div>
+  <div id="list"></div>
+  <button class="ghostbtn" id="csv" style="margin-top:18px"></button>
+  <div class="note" id="note" role="status"></div>
 </div>
 
-<button class="fab" id="fab" hidden aria-label="+">+</button>
+<nav id="nav" hidden>
+  <button data-t="buy" class="on"><span class="ico">&#9636;</span><span id="nBuy"></span></button>
+  <button data-t="req"><span class="ico">&#9744;</span><span id="nReq"></span><span class="dot" id="reqDot" hidden>0</span></button>
+  <button class="fab" id="fab" aria-label="+">+</button>
+  <button data-t="dlv"><span class="ico">&#9660;</span><span id="nDlv"></span></button>
+  <button data-t="tr"><span class="ico">&#8645;</span><span id="nTr"></span></button>
+</nav>
 
-<!-- add sheet -->
 <div class="sheet" id="sheet">
   <div class="card">
+    <div class="grab"></div>
     <h3 id="shTitle"></h3>
-    <p class="sub" id="shSub"></p>
 
     <div class="pick" id="pick">
-      <button data-f="req"  id="pkReq"></button>
-      <button data-f="buy"  id="pkBuy"></button>
-      <button data-f="dlv"  id="pkDlv"></button>
-      <button data-f="tr"   id="pkTr"></button>
+      <button data-f="fReq"><i>&#9744;</i><span id="pkReq"></span></button>
+      <button data-f="fBuy"><i>&#9636;</i><span id="pkBuy"></span></button>
+      <button data-f="fDlv"><i>&#9660;</i><span id="pkDlv"></span></button>
+      <button data-f="fTr"><i>&#8645;</i><span id="pkTr"></span></button>
     </div>
 
     <form id="fReq" hidden>
-      <div class="grid">
+      <div class="grid2">
         <div class="full"><label for="r_item" id="lReqItem"></label><input id="r_item" required></div>
         <div class="full"><label for="r_link" id="lReqLink"></label><input id="r_link" type="url" placeholder="https://"></div>
         <div><label for="r_price" id="lEstPrice"></label><input id="r_price" type="number" step="0.01" min="0" placeholder="0.00"></div>
         <div><label for="r_pay" id="lEstPay"></label><input id="r_pay" type="number" step="0.01" min="0" placeholder="0.00"></div>
         <div class="full"><label for="r_note" id="lReqNote"></label><textarea id="r_note"></textarea></div>
-        <div class="full"><button class="go" type="submit" id="rSave"></button><button type="button" class="cancel close"></button></div>
       </div>
+      <button class="go" type="submit" id="rSave"></button>
+      <button type="button" class="ghostbtn close"></button>
     </form>
 
     <form id="fBuy" hidden>
-      <div class="grid">
+      <div class="grid2">
         <div class="full"><label for="b_item" id="lItem"></label><input id="b_item" required></div>
         <div><label for="b_date" id="lDate1"></label><input id="b_date" type="date" required></div>
         <div><label for="b_price" id="lProd"></label><input id="b_price" type="number" step="0.01" min="0" required placeholder="0.00"></div>
         <div><label for="b_ship" id="lShip"></label><input id="b_ship" type="number" step="0.01" min="0" placeholder="0.00"></div>
-        <div><label for="b_recv" id="lRecv"></label><input id="b_recv" type="number" step="0.01" min="0" placeholder="0.00"></div>
-        <div class="full"><label for="b_link" id="lLink"></label><input id="b_link" type="url" placeholder="https://"></div>
         <div><label for="b_stat" id="lStat"></label><select id="b_stat"></select></div>
-        <div><label for="b_track" id="lTrackNo"></label><input id="b_track"></div>
+        <div class="full"><label for="b_link" id="lLink"></label><input id="b_link" type="url" placeholder="https://"></div>
+        <div class="full"><label for="b_track" id="lTrackNo"></label><input id="b_track" placeholder="00340434…"></div>
         <div class="full"><label for="b_turl" id="lTrackUrl"></label><input id="b_turl" type="url" placeholder="https://"></div>
         <div class="full"><label for="b_img" id="lShot"></label><input id="b_img" type="file" accept="image/*"></div>
         <div class="full"><label for="b_note" id="lNote1"></label><textarea id="b_note"></textarea></div>
-        <div class="full"><button class="go" type="submit" id="bSave"></button><button type="button" class="cancel close"></button></div>
       </div>
+      <button class="go" type="submit" id="bSave"></button>
+      <button type="button" class="danger" id="bDel" hidden></button>
+      <button type="button" class="ghostbtn close"></button>
     </form>
 
     <form id="fDlv" hidden>
-      <div class="grid">
+      <div class="grid2">
         <div><label for="d_date" id="lDate3"></label><input id="d_date" type="date" required></div>
         <div><label for="d_price" id="lDlvPrice"></label><input id="d_price" type="number" step="0.01" min="0" required placeholder="0.00"></div>
         <div class="full"><label for="d_dest" id="lDest"></label><input id="d_dest" required></div>
+        <div class="full"><label for="d_track" id="lTrackNo2"></label><input id="d_track" placeholder="00340434…"></div>
+        <div class="full"><label for="d_turl" id="lTrackUrl2"></label><input id="d_turl" type="url" placeholder="https://"></div>
         <div class="full"><label for="d_img" id="lDlvImg"></label><input id="d_img" type="file" accept="image/*"></div>
         <div class="full"><label for="d_note" id="lNote3"></label><textarea id="d_note"></textarea></div>
-        <div class="full"><button class="go" type="submit" id="dSave"></button><button type="button" class="cancel close"></button></div>
       </div>
+      <button class="go" type="submit" id="dSave"></button>
+      <button type="button" class="danger" id="dDel" hidden></button>
+      <button type="button" class="ghostbtn close"></button>
     </form>
 
     <form id="fTr" hidden>
-      <div class="grid">
+      <div class="grid2">
         <div><label for="t_name" id="lSender"></label><input id="t_name" required list="senders"><datalist id="senders"></datalist></div>
         <div><label for="t_date" id="lDate2"></label><input id="t_date" type="date" required></div>
         <div class="full"><label for="t_amt" id="lAmount"></label><input id="t_amt" type="number" step="0.01" min="0" required placeholder="0.00"></div>
         <div class="full"><label for="t_img" id="lReceipt"></label><input id="t_img" type="file" accept="image/*"></div>
         <div class="full"><label for="t_note" id="lNote2"></label><textarea id="t_note"></textarea></div>
-        <div class="full"><button class="go" type="submit" id="tSave"></button><button type="button" class="cancel close"></button></div>
       </div>
+      <button class="go" type="submit" id="tSave"></button>
+      <button type="button" class="danger" id="tDel" hidden></button>
+      <button type="button" class="ghostbtn close"></button>
     </form>
 
     <form id="fBought" hidden>
-      <div class="grid">
+      <div class="grid2">
         <div><label for="k_price" id="lProd2"></label><input id="k_price" type="number" step="0.01" min="0" required placeholder="0.00"></div>
         <div><label for="k_ship" id="lShip2"></label><input id="k_ship" type="number" step="0.01" min="0" placeholder="0.00"></div>
-        <div class="full"><label for="k_recv" id="lRecv2"></label><input id="k_recv" type="number" step="0.01" min="0" placeholder="0.00"></div>
-        <div class="full"><button class="go" type="submit" id="kSave"></button><button type="button" class="cancel close"></button></div>
       </div>
+      <button class="go" type="submit" id="kSave"></button>
+      <button type="button" class="ghostbtn close"></button>
     </form>
   </div>
 </div>
 
-<div class="modal" id="modal"><button id="mx" aria-label="×">×</button><img id="mimg" alt=""></div>
+<div class="viewer" id="viewer"><button id="vx" aria-label="x">&times;</button><img id="vimg" alt=""></div>
 
 <script type="module">
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
@@ -272,214 +279,192 @@ const SUPABASE_URL = 'https://riuucxronhqigeqchskh.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_bgGl55ybrqhbX3Abs3Jdeg_DhBiioSp';
 
 const T = {
-  de:{ _name:'DE',_locale:'de-DE',_dir:'ltr',
-    tag:'Bücher: Wünsche, Einkäufe, Versand, Überweisungen',
-    tagViewer:'Wünsche einreichen und Stand verfolgen',
-    gateTag:'Einkäufe und Überweisungen, an einem Ort',
-    gateIntro:'Trag deine E-Mail ein. Du bekommst einen Link, mit dem du dich anmeldest, ohne Passwort.',
-    email:'E-Mail',sendLink:'Link schicken',linkSent:'Link ist unterwegs. Schau in dein Postfach.',signout:'Abmelden',
-    viewerBanner:'Du siehst ein fremdes Buch. Du kannst Wünsche einreichen, sonst nur lesen.',
-    balCap:'Restguthaben: überwiesen minus Einkäufe und Versand. Kein Einkommen, sondern ein Vorschuss.',
-    balCapNeg:'Du liegst im Minus: du hast mehr ausgelegt, als überwiesen wurde.',
-    transferred:'Überwiesen',spent:'Ausgegeben',count:'Gekauft',open:'Noch nicht übergeben',
-    period:'Zeitraum',thisYear:'Dieses Jahr',d30:'30 Tage',all:'Alles',
-    tip:'Aufschlag',ofLimit:'von 256',over:'über der Freigrenze, alles in Anlage SO',
-    tabReq:'Wünsche',tabBuy:'Einkäufe',tabDlv:'Versand',tabTr:'Überweisungen',
-    addTitle:'Was hinzufügen?',addSub:'Wähle die Art des Eintrags.',
-    pkReq:'Wunsch',pkReqS:'Etwas, das besorgt werden soll',
-    pkBuy:'Einkauf',pkBuyS:'Gekaufte Ware mit Preis',
-    pkDlv:'Versand',pkDlvS:'Portokosten für eine Sendung',
-    pkTr:'Überweisung',pkTrS:'Geld, das bei dir eingegangen ist',
-    reqItem:'Was soll besorgt werden?',reqItemPh:'Dior Sauvage, 10 ml Abfüllung',
-    reqLink:'Link, falls vorhanden',estPrice:'Preis im Shop €',estPay:'Was du zahlst €',
-    reqNote:'Anmerkung',reqNotePh:'Nicht dringend, bis Ende des Monats',
-    sendReq:'Wunsch einreichen',reqSent:'Wunsch eingereicht.',noReq:'Keine offenen Wünsche.',
-    pending:'Offen',approved:'Zugesagt',declined:'Abgelehnt',notBought:'noch nicht gekauft',
-    approve:'Zusagen',decline:'Ablehnen',markBought:'Als gekauft',quoted:'angesetzt',
-    boughtTitle:'Als gekauft übernehmen',boughtSub:'Was hat es dich gekostet, und was hast du dafür bekommen?',
-    saveBought:'Übernehmen',boughtMsg:'In die Einkäufe übernommen.',
-    approvedMsg:'Zugesagt.',declinedMsg:'Abgelehnt.',
-    item:'Artikel',itemPh:'3 Mini-Flakons Dior Sauvage',date:'Datum',
-    prod:'Warenpreis €',ship:'Versand €',recv:'Erhalten dafür €',extra:'Aufschlag',
-    link:'Produktlink',deliveryStatus:'Lieferstatus',trackNo:'Sendungsnummer',trackUrl:'Tracking-Link',
-    shot:'Screenshot / Beleg',note:'Notiz',notePh:'Übergeben an … am …',savePurchase:'Einkauf speichern',
-    dlvPrice:'Portokosten €',dest:'Ziel',destPh:'Istanbul, an Ahmet',dlvImg:'Beleg',saveDlv:'Versand speichern',
-    savedDlv:'Versand gespeichert.',emptyDlv:'Kein Versand im Zeitraum.',shipping:'Versand',
-    sender:'Absender',senderPh:'Name',amount:'Betrag €',receipt:'Überweisungsbeleg',
-    notePh2:'PayPal F&F, Verwendungszweck …',saveTransfer:'Überweisung speichern',
-    product:'Produkt',tracking:'Tracking',shotTag:'Beleg',receiptTag:'Beleg',cancel:'Abbrechen',
-    emptyBuy:'Keine Einkäufe im Zeitraum.',emptyTr:'Keine Überweisungen im Zeitraum.',
-    exportCsv:'CSV exportieren',exported:'Exportiert. Bilder sind nicht enthalten.',nothing:'Nichts zu exportieren.',
-    loading:'Lade …',saving:'Speichere …',savedBuy:'Einkauf gespeichert.',savedTr:'Überweisung gespeichert.',
-    deleted:'Gelöscht.',confirmDel:'Eintrag löschen?',statusChanged:'Status geändert.',
-    errLoad:'Konnte nicht laden: ',errSave:'Nicht gespeichert: ',errDel:'Nicht gelöscht: ',
-    errImg:'Bild nicht hochgeladen: ',errImgFind:'Bild nicht gefunden.',errLogin:'Hat nicht geklappt: ',
-    st:{ordered:'Bestellt',shipped:'Unterwegs',arrived:'Angekommen',handed:'Übergeben',delivered:'Beim Freund'} },
+ de:{_n:'DE',_l:'de-DE',_d:'ltr',
+  kicker:'Guthaben',hello:'Hallo',
+  gIntro:'Trag deine E-Mail ein. Du bekommst einen Link zum Anmelden, ohne Passwort.',
+  email:'E-Mail',sendLink:'Link schicken',linkSent:'Link ist unterwegs. Schau in dein Postfach.',
+  viewerBanner:'Du siehst ein fremdes Buch. Du kannst Wünsche einreichen, sonst nur lesen.',
+  heroLab:'Noch nicht ausgegeben',heroNeg:'Du hast mehr ausgelegt als bekommen',
+  inn:'Erhalten',out:'Ausgegeben',
+  thisYear:'Dieses Jahr',d30:'30 Tage',all:'Alles',
+  nBuy:'Buch',nReq:'Wünsche',nDlv:'Versand',nTr:'Geld',
+  secBuy:'Einkäufe',secReq:'Wünsche',secDlv:'Versand',secTr:'Überweisungen',
+  addTitle:'Was hinzufügen?',
+  pkReq:'Wunsch',pkReqS:'Etwas, das besorgt werden soll',
+  pkBuy:'Einkauf',pkBuyS:'Gekaufte Ware mit Preis',
+  pkDlv:'Versand',pkDlvS:'Paket mit Portokosten',
+  pkTr:'Überweisung',pkTrS:'Geld, das eingegangen ist',
+  reqItem:'Was soll besorgt werden?',reqItemPh:'Dior Sauvage, 10 ml',
+  reqLink:'Link, falls vorhanden',estPrice:'Preis im Shop €',estPay:'Was du zahlst €',
+  reqNote:'Anmerkung',reqNotePh:'Nicht dringend',sendReq:'Wunsch senden',reqSent:'Wunsch gesendet.',
+  pending:'Offen',approved:'Zugesagt',declined:'Abgelehnt',notBought:'noch nicht gekauft',
+  approve:'Zusagen',decline:'Ablehnen',markBought:'Als gekauft',quoted:'angesetzt',
+  boughtTitle:'Als gekauft übernehmen',confirm:'Übernehmen',boughtMsg:'Übernommen.',
+  approvedMsg:'Zugesagt.',declinedMsg:'Abgelehnt.',
+  item:'Artikel',itemPh:'3 Mini-Flakons',date:'Datum',prod:'Warenpreis €',ship:'Versand €',
+  link:'Produktlink',stat:'Lieferstatus',trackNo:'Sendungsnummer',trackUrl:'Tracking-Link',
+  shot:'Beleg / Screenshot',note:'Notiz',notePh:'Übergeben an … am …',
+  savePurchase:'Speichern',editBuy:'Einkauf bearbeiten',newBuy:'Neuer Einkauf',
+  dlvPrice:'Portokosten €',dest:'Ziel',destPh:'Istanbul, an Ahmet',dlvImg:'Beleg',
+  saveDlv:'Speichern',editDlv:'Versand bearbeiten',newDlv:'Neuer Versand',savedDlv:'Gespeichert.',
+  sender:'Absender',senderPh:'Name',amount:'Betrag €',receipt:'Beleg',
+  notePh2:'PayPal F&F …',saveTr:'Speichern',editTr:'Überweisung bearbeiten',newTr:'Neue Überweisung',
+  product:'Produkt',tracking:'Tracking',beleg:'Beleg',cancel:'Schließen',del:'Löschen',
+  emptyBuy:'Keine Einkäufe im Zeitraum.',emptyReq:'Keine offenen Wünsche.',
+  emptyDlv:'Kein Versand im Zeitraum.',emptyTr:'Keine Überweisungen im Zeitraum.',
+  csv:'CSV exportieren',exported:'Exportiert.',nothing:'Nichts zu exportieren.',
+  loading:'Lade …',saving:'Speichere …',saved:'Gespeichert.',deleted:'Gelöscht.',confirmDel:'Wirklich löschen?',
+  errLoad:'Konnte nicht laden: ',errSave:'Nicht gespeichert: ',errDel:'Nicht gelöscht: ',
+  errImg:'Bild nicht hochgeladen: ',errImgFind:'Bild nicht gefunden.',errLogin:'Hat nicht geklappt: ',
+  notifyOn:'Benachrichtigungen an',nNewReq:'Neuer Wunsch',nNewBuy:'Neuer Einkauf',nDecided:'Wunsch beantwortet',
+  st:{ordered:'Bestellt',shipped:'Unterwegs',arrived:'Angekommen',handed:'Übergeben',delivered:'Beim Freund'}},
 
-  en:{ _name:'EN',_locale:'en-GB',_dir:'ltr',
-    tag:'Ledgers: requests, purchases, shipping, transfers',
-    tagViewer:'Send requests and follow their progress',
-    gateTag:'Purchases and transfers in one place',
-    gateIntro:'Enter your email. You get a link that signs you in, no password needed.',
-    email:'Email',sendLink:'Send link',linkSent:'Link sent. Check your inbox.',signout:'Sign out',
-    viewerBanner:'You are looking at someone else’s ledger. You can send requests, everything else is read-only.',
-    balCap:'Balance held: transferred in, minus purchases and shipping. Not income, an advance.',
-    balCapNeg:'You are out of pocket: you have spent more than was transferred.',
-    transferred:'Transferred in',spent:'Spent',count:'Bought',open:'Not handed over yet',
-    period:'Period',thisYear:'This year',d30:'30 days',all:'All',
-    tip:'Surcharge kept',ofLimit:'of 256',over:'over the €256 threshold, all of it is declarable',
-    tabReq:'Requests',tabBuy:'Purchases',tabDlv:'Shipping',tabTr:'Transfers',
-    addTitle:'Add what?',addSub:'Pick the kind of entry.',
-    pkReq:'Request',pkReqS:'Something you want bought',
-    pkBuy:'Purchase',pkBuyS:'Something bought, with prices',
-    pkDlv:'Shipping',pkDlvS:'Postage cost for a parcel',
-    pkTr:'Transfer',pkTrS:'Money that arrived with you',
-    reqItem:'What should be bought?',reqItemPh:'Dior Sauvage, 10 ml decant',
-    reqLink:'Link, if you have one',estPrice:'Price at the shop €',estPay:'What you will pay €',
-    reqNote:'Note',reqNotePh:'Not urgent, by end of month',
-    sendReq:'Send request',reqSent:'Request sent.',noReq:'No open requests.',
-    pending:'Pending',approved:'Approved',declined:'Declined',notBought:'not bought yet',
-    approve:'Approve',decline:'Decline',markBought:'Mark bought',quoted:'quoted',
-    boughtTitle:'Move to purchases',boughtSub:'What did it cost you, and what did you get for it?',
-    saveBought:'Confirm',boughtMsg:'Moved to purchases.',
-    approvedMsg:'Approved.',declinedMsg:'Declined.',
-    item:'Item',itemPh:'3 mini bottles Dior Sauvage',date:'Date',
-    prod:'Product price €',ship:'Shipping €',recv:'Received for it €',extra:'surcharge',
-    link:'Product link',deliveryStatus:'Delivery status',trackNo:'Tracking number',trackUrl:'Tracking link',
-    shot:'Screenshot / receipt',note:'Note',notePh:'Handed to … on …',savePurchase:'Save purchase',
-    dlvPrice:'Postage cost €',dest:'Destination',destPh:'Istanbul, to Ahmet',dlvImg:'Receipt',saveDlv:'Save shipping',
-    savedDlv:'Shipping saved.',emptyDlv:'No shipping in this period.',shipping:'shipping',
-    sender:'Sender',senderPh:'Name',amount:'Amount €',receipt:'Transfer receipt',
-    notePh2:'PayPal F&F, reference …',saveTransfer:'Save transfer',
-    product:'Product',tracking:'Tracking',shotTag:'Receipt',receiptTag:'Receipt',cancel:'Cancel',
-    emptyBuy:'No purchases in this period.',emptyTr:'No transfers in this period.',
-    exportCsv:'Export CSV',exported:'Exported. Images are not included.',nothing:'Nothing to export.',
-    loading:'Loading …',saving:'Saving …',savedBuy:'Purchase saved.',savedTr:'Transfer saved.',
-    deleted:'Deleted.',confirmDel:'Delete this entry?',statusChanged:'Status updated.',
-    errLoad:'Could not load: ',errSave:'Not saved: ',errDel:'Not deleted: ',
-    errImg:'Image not uploaded: ',errImgFind:'Image not found.',errLogin:'That did not work: ',
-    st:{ordered:'Ordered',shipped:'In transit',arrived:'Arrived',handed:'Handed over',delivered:'With him'} },
+ en:{_n:'EN',_l:'en-GB',_d:'ltr',
+  kicker:'Balance',hello:'Hi',
+  gIntro:'Enter your email. You get a link to sign in, no password.',
+  email:'Email',sendLink:'Send link',linkSent:'Link sent. Check your inbox.',
+  viewerBanner:'You are viewing someone else’s ledger. You can send requests, everything else is read-only.',
+  heroLab:'Not yet spent',heroNeg:'You have spent more than you received',
+  inn:'Received',out:'Spent',
+  thisYear:'This year',d30:'30 days',all:'All',
+  nBuy:'Ledger',nReq:'Requests',nDlv:'Shipping',nTr:'Money',
+  secBuy:'Purchases',secReq:'Requests',secDlv:'Shipping',secTr:'Transfers',
+  addTitle:'Add what?',
+  pkReq:'Request',pkReqS:'Something to be bought',
+  pkBuy:'Purchase',pkBuyS:'Something bought, with price',
+  pkDlv:'Shipping',pkDlvS:'A parcel and its postage',
+  pkTr:'Transfer',pkTrS:'Money that arrived',
+  reqItem:'What should be bought?',reqItemPh:'Dior Sauvage, 10 ml',
+  reqLink:'Link, if you have one',estPrice:'Price at the shop €',estPay:'What you will pay €',
+  reqNote:'Note',reqNotePh:'Not urgent',sendReq:'Send request',reqSent:'Request sent.',
+  pending:'Pending',approved:'Approved',declined:'Declined',notBought:'not bought yet',
+  approve:'Approve',decline:'Decline',markBought:'Mark bought',quoted:'quoted',
+  boughtTitle:'Move to purchases',confirm:'Confirm',boughtMsg:'Moved to purchases.',
+  approvedMsg:'Approved.',declinedMsg:'Declined.',
+  item:'Item',itemPh:'3 mini bottles',date:'Date',prod:'Product price €',ship:'Shipping €',
+  link:'Product link',stat:'Delivery status',trackNo:'Tracking number',trackUrl:'Tracking link',
+  shot:'Receipt / screenshot',note:'Note',notePh:'Handed to … on …',
+  savePurchase:'Save',editBuy:'Edit purchase',newBuy:'New purchase',
+  dlvPrice:'Postage €',dest:'Destination',destPh:'Istanbul, to Ahmet',dlvImg:'Receipt',
+  saveDlv:'Save',editDlv:'Edit shipment',newDlv:'New shipment',savedDlv:'Saved.',
+  sender:'Sender',senderPh:'Name',amount:'Amount €',receipt:'Receipt',
+  notePh2:'PayPal F&F …',saveTr:'Save',editTr:'Edit transfer',newTr:'New transfer',
+  product:'Product',tracking:'Tracking',beleg:'Receipt',cancel:'Close',del:'Delete',
+  emptyBuy:'No purchases in this period.',emptyReq:'No open requests.',
+  emptyDlv:'No shipments in this period.',emptyTr:'No transfers in this period.',
+  csv:'Export CSV',exported:'Exported.',nothing:'Nothing to export.',
+  loading:'Loading …',saving:'Saving …',saved:'Saved.',deleted:'Deleted.',confirmDel:'Delete this?',
+  errLoad:'Could not load: ',errSave:'Not saved: ',errDel:'Not deleted: ',
+  errImg:'Image not uploaded: ',errImgFind:'Image not found.',errLogin:'That did not work: ',
+  notifyOn:'Notifications on',nNewReq:'New request',nNewBuy:'New purchase',nDecided:'Request answered',
+  st:{ordered:'Ordered',shipped:'In transit',arrived:'Arrived',handed:'Handed over',delivered:'With him'}},
 
-  ar:{ _name:'ع',_locale:'ar-u-nu-latn',_dir:'rtl',
-    tag:'الدفاتر: الطلبات، المشتريات، الشحن، الحوالات',
-    tagViewer:'أرسل طلباتك وتابع حالتها',
-    gateTag:'المشتريات والحوالات في مكان واحد',
-    gateIntro:'أدخل بريدك الإلكتروني. سيصلك رابط لتسجيل الدخول بدون كلمة مرور.',
-    email:'البريد الإلكتروني',sendLink:'أرسل الرابط',linkSent:'تم إرسال الرابط. تحقق من بريدك.',signout:'تسجيل الخروج',
-    viewerBanner:'أنت تطّلع على دفتر شخص آخر. يمكنك إرسال طلبات، وما عدا ذلك للقراءة فقط.',
-    balCap:'الرصيد المتبقي: المحوَّل ناقص المشتريات والشحن. ليس دخلاً بل سلفة.',
-    balCapNeg:'أنت في الناقص: أنفقت أكثر مما حُوّل إليك.',
-    transferred:'المحوَّل',spent:'المنفق',count:'المشتراة',open:'لم يُسلَّم بعد',
-    period:'الفترة',thisYear:'هذه السنة',d30:'30 يوماً',all:'الكل',
-    tip:'الزيادة المحتفظ بها',ofLimit:'من 256',over:'تجاوزت حد 256 يورو، المبلغ كله يُصرَّح',
-    tabReq:'الطلبات',tabBuy:'المشتريات',tabDlv:'الشحن',tabTr:'الحوالات',
-    addTitle:'ماذا تريد أن تضيف؟',addSub:'اختر نوع السجل.',
-    pkReq:'طلب',pkReqS:'شيء تريد شراءه',
-    pkBuy:'شراء',pkBuyS:'بضاعة اشتريتها مع الأسعار',
-    pkDlv:'شحن',pkDlvS:'تكلفة إرسال طرد',
-    pkTr:'حوالة',pkTrS:'مبلغ وصل إليك',
-    reqItem:'ما الذي تريد شراءه؟',reqItemPh:'ديور سوفاج، عبوة 10 مل',
-    reqLink:'رابط إن وُجد',estPrice:'السعر في المتجر €',estPay:'ما ستدفعه €',
-    reqNote:'ملاحظة',reqNotePh:'غير مستعجل، قبل نهاية الشهر',
-    sendReq:'إرسال الطلب',reqSent:'تم إرسال الطلب.',noReq:'لا طلبات معلّقة.',
-    pending:'معلّق',approved:'موافَق عليه',declined:'مرفوض',notBought:'لم يُشترَ بعد',
-    approve:'موافقة',decline:'رفض',markBought:'تم الشراء',quoted:'مُقدَّر',
-    boughtTitle:'نقل إلى المشتريات',boughtSub:'كم كلّفك، وكم استلمت مقابله؟',
-    saveBought:'تأكيد',boughtMsg:'نُقل إلى المشتريات.',
-    approvedMsg:'تمت الموافقة.',declinedMsg:'تم الرفض.',
-    item:'الصنف',itemPh:'3 عبوات صغيرة ديور سوفاج',date:'التاريخ',
-    prod:'سعر البضاعة €',ship:'الشحن €',recv:'المستلم مقابله €',extra:'زيادة',
-    link:'رابط المنتج',deliveryStatus:'حالة التسليم',trackNo:'رقم الشحنة',trackUrl:'رابط التتبع',
-    shot:'صورة / إيصال',note:'ملاحظة',notePh:'سُلّم إلى … بتاريخ …',savePurchase:'حفظ الشراء',
-    dlvPrice:'تكلفة الإرسال €',dest:'الوجهة',destPh:'إسطنبول، إلى أحمد',dlvImg:'الإيصال',saveDlv:'حفظ الشحن',
-    savedDlv:'تم حفظ الشحن.',emptyDlv:'لا شحنات في هذه الفترة.',shipping:'شحن',
-    sender:'المُرسِل',senderPh:'الاسم',amount:'المبلغ €',receipt:'إيصال الحوالة',
-    notePh2:'باي بال أصدقاء وعائلة، الغرض …',saveTransfer:'حفظ الحوالة',
-    product:'المنتج',tracking:'التتبع',shotTag:'الإيصال',receiptTag:'الإيصال',cancel:'إلغاء',
-    emptyBuy:'لا مشتريات في هذه الفترة.',emptyTr:'لا حوالات في هذه الفترة.',
-    exportCsv:'تصدير CSV',exported:'تم التصدير. الصور غير مضمَّنة.',nothing:'لا شيء للتصدير.',
-    loading:'جارٍ التحميل …',saving:'جارٍ الحفظ …',savedBuy:'تم حفظ الشراء.',savedTr:'تم حفظ الحوالة.',
-    deleted:'تم الحذف.',confirmDel:'حذف هذا السجل؟',statusChanged:'تم تحديث الحالة.',
-    errLoad:'تعذّر التحميل: ',errSave:'لم يُحفظ: ',errDel:'لم يُحذف: ',
-    errImg:'لم تُرفع الصورة: ',errImgFind:'الصورة غير موجودة.',errLogin:'لم ينجح الأمر: ',
-    st:{ordered:'تم الطلب',shipped:'في الطريق',arrived:'وصل',handed:'تم التسليم',delivered:'عند صديقي'} }
+ ar:{_n:'ع',_l:'ar-u-nu-latn',_d:'rtl',
+  kicker:'الرصيد',hello:'أهلاً',
+  gIntro:'أدخل بريدك الإلكتروني. سيصلك رابط لتسجيل الدخول بدون كلمة مرور.',
+  email:'البريد الإلكتروني',sendLink:'أرسل الرابط',linkSent:'تم إرسال الرابط. تحقق من بريدك.',
+  viewerBanner:'أنت تطّلع على دفتر شخص آخر. يمكنك إرسال طلبات، وما عدا ذلك للقراءة فقط.',
+  heroLab:'لم يُنفق بعد',heroNeg:'أنفقت أكثر مما استلمت',
+  inn:'المستلم',out:'المنفق',
+  thisYear:'هذه السنة',d30:'30 يوماً',all:'الكل',
+  nBuy:'الدفتر',nReq:'الطلبات',nDlv:'الشحن',nTr:'المال',
+  secBuy:'المشتريات',secReq:'الطلبات',secDlv:'الشحن',secTr:'الحوالات',
+  addTitle:'ماذا تريد أن تضيف؟',
+  pkReq:'طلب',pkReqS:'شيء تريد شراءه',
+  pkBuy:'شراء',pkBuyS:'بضاعة اشتريتها مع السعر',
+  pkDlv:'شحن',pkDlvS:'طرد وتكلفة إرساله',
+  pkTr:'حوالة',pkTrS:'مبلغ وصل إليك',
+  reqItem:'ما الذي تريد شراءه؟',reqItemPh:'ديور سوفاج، 10 مل',
+  reqLink:'رابط إن وُجد',estPrice:'السعر في المتجر €',estPay:'ما ستدفعه €',
+  reqNote:'ملاحظة',reqNotePh:'غير مستعجل',sendReq:'إرسال الطلب',reqSent:'أُرسل الطلب.',
+  pending:'معلّق',approved:'موافَق عليه',declined:'مرفوض',notBought:'لم يُشترَ بعد',
+  approve:'موافقة',decline:'رفض',markBought:'تم الشراء',quoted:'مُقدَّر',
+  boughtTitle:'نقل إلى المشتريات',confirm:'تأكيد',boughtMsg:'تم النقل.',
+  approvedMsg:'تمت الموافقة.',declinedMsg:'تم الرفض.',
+  item:'الصنف',itemPh:'3 عبوات صغيرة',date:'التاريخ',prod:'سعر البضاعة €',ship:'الشحن €',
+  link:'رابط المنتج',stat:'حالة التسليم',trackNo:'رقم الشحنة',trackUrl:'رابط التتبع',
+  shot:'إيصال / صورة',note:'ملاحظة',notePh:'سُلّم إلى … بتاريخ …',
+  savePurchase:'حفظ',editBuy:'تعديل الشراء',newBuy:'شراء جديد',
+  dlvPrice:'تكلفة الإرسال €',dest:'الوجهة',destPh:'إسطنبول، إلى أحمد',dlvImg:'الإيصال',
+  saveDlv:'حفظ',editDlv:'تعديل الشحنة',newDlv:'شحنة جديدة',savedDlv:'تم الحفظ.',
+  sender:'المُرسِل',senderPh:'الاسم',amount:'المبلغ €',receipt:'الإيصال',
+  notePh2:'باي بال أصدقاء وعائلة …',saveTr:'حفظ',editTr:'تعديل الحوالة',newTr:'حوالة جديدة',
+  product:'المنتج',tracking:'التتبع',beleg:'الإيصال',cancel:'إغلاق',del:'حذف',
+  emptyBuy:'لا مشتريات في هذه الفترة.',emptyReq:'لا طلبات معلّقة.',
+  emptyDlv:'لا شحنات في هذه الفترة.',emptyTr:'لا حوالات في هذه الفترة.',
+  csv:'تصدير CSV',exported:'تم التصدير.',nothing:'لا شيء للتصدير.',
+  loading:'جارٍ التحميل …',saving:'جارٍ الحفظ …',saved:'تم الحفظ.',deleted:'تم الحذف.',confirmDel:'هل تريد الحذف؟',
+  errLoad:'تعذّر التحميل: ',errSave:'لم يُحفظ: ',errDel:'لم يُحذف: ',
+  errImg:'لم تُرفع الصورة: ',errImgFind:'الصورة غير موجودة.',errLogin:'لم ينجح الأمر: ',
+  notifyOn:'التنبيهات مفعّلة',nNewReq:'طلب جديد',nNewBuy:'شراء جديد',nDecided:'تم الرد على الطلب',
+  st:{ordered:'تم الطلب',shipped:'في الطريق',arrived:'وصل',handed:'تم التسليم',delivered:'عند صديقي'}}
 };
 const LANGS=['de','en','ar'], STATUSES=['ordered','shipped','arrived','handed','delivered'];
-
-let lang=(()=>{ try{const s=localStorage.getItem('auslagen.lang'); if(LANGS.includes(s))return s;}catch{}
-  const n=(navigator.language||'de').slice(0,2); return LANGS.includes(n)?n:'de'; })();
+let lang=(()=>{try{const s=localStorage.getItem('auslagen.lang');if(LANGS.includes(s))return s}catch{}
+  const n=(navigator.language||'de').slice(0,2);return LANGS.includes(n)?n:'de'})();
 const t=k=>T[lang][k];
 
 const sb=createClient(SUPABASE_URL,SUPABASE_KEY);
-const LIMIT=256, BUCKET='belege';
+const BUCKET='belege';
 let buys=[],trs=[],dlvs=[],uid=null,ownerId=null,viewer=false;
-let from='',to='',tab='req',boughtId=null;
+let from='',to='',tab='buy',editId=null,editKind=null,boughtId=null;
 
 const $=i=>document.getElementById(i);
-function fmt(n,dec){ try{ return new Intl.NumberFormat(T[lang]._locale,
-  {style:'currency',currency:'EUR',minimumFractionDigits:dec,maximumFractionDigits:dec}).format(n);}
-  catch{ return '€'+n.toFixed(dec);} }
+const fmt=(n,d)=>{try{return new Intl.NumberFormat(T[lang]._l,{style:'currency',currency:'EUR',
+  minimumFractionDigits:d,maximumFractionDigits:d}).format(n)}catch{return '€'+n.toFixed(d)}};
 const eur=n=>fmt(n,2), eur0=n=>fmt(Math.round(n),0);
 const esc=s=>(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const numv=v=>Math.max(0,parseFloat(String(v).replace(',','.'))||0);
-const nz=v=>v===null||v===undefined?0:+v;
+const nz=v=>v==null?0:+v;
 const inR=d=>(!from||d>=from)&&(!to||d<=to);
-const de2=n=>n.toFixed(2).replace('.',','), qq=s=>'"'+(s||'').replace(/"/g,'""')+'"';
-const say=(m,e)=>{$('status').textContent=m;$('status').className='status'+(e?' err':'')};
-const dd=r=>r.date.slice(8,10)+'.'+r.date.slice(5,7)+'.';
+const say=(m,e)=>{$('note').textContent=m;$('note').className='note'+(e?' err':'')};
 const today=()=>new Date().toISOString().slice(0,10);
-
-const isBought=b=>b.approval==='approved'&&b.paid!==null&&b.paid!==undefined;
+const isBought=b=>b.approval==='approved'&&b.paid!=null;
 const cost=b=>nz(b.price)+nz(b.shipping);
-const extra=b=>nz(b.received)-cost(b);
-const quoteTotal=b=>nz(b.est_payment)||nz(b.est_price);
-const hasQuote=b=>b.est_price!=null||b.est_payment!=null;
+const dayLbl=r=>new Date(r.date+'T12:00').toLocaleDateString(T[lang]._l,{day:'numeric',month:'short'});
+const initials=s=>(s||'?').trim().slice(0,2).toUpperCase();
 
 /* ---------- language ---------- */
-function buildLangBar(el){
-  el.innerHTML=LANGS.map(l=>`<button data-l="${l}"${l===lang?' class="on"':''}>${T[l]._name}</button>`).join('');
-  el.querySelectorAll('button').forEach(b=>b.onclick=()=>{
-    lang=b.dataset.l; try{localStorage.setItem('auslagen.lang',lang)}catch{}
-    applyLang(); if(uid) render();
-  });
+function langBar(el){
+  el.innerHTML=LANGS.map(l=>`<button data-l="${l}"${l===lang?' class="on"':''}>${T[l]._n}</button>`).join('');
+  el.querySelectorAll('button').forEach(b=>b.onclick=()=>{lang=b.dataset.l;
+    try{localStorage.setItem('auslagen.lang',lang)}catch{}; applyLang(); if(uid) render();});
 }
 function applyLang(){
   const d=T[lang];
-  document.documentElement.lang=lang; document.documentElement.dir=d._dir;
-  const set=(id,v)=>{const e=$(id); if(e) e.textContent=v;};
-  const ph=(id,v)=>{const e=$(id); if(e) e.placeholder=v;};
-
-  set('gTag',d.gateTag); set('gIntro',d.gateIntro); set('lEmail',d.email); set('loginBtn',d.sendLink);
-  set('aTag',viewer?d.tagViewer:d.tag); set('out',d.signout); set('viewerBanner',d.viewerBanner);
-  set('lIn',d.transferred); set('lOut',d.spent); set('lN',d.count); set('lOpen',d.open);
-  set('lPeriod',d.period); set('lTip',d.tip);
+  document.documentElement.lang=lang; document.documentElement.dir=d._d;
+  const S=(i,v)=>{const e=$(i); if(e) e.textContent=v};
+  const P=(i,v)=>{const e=$(i); if(e) e.placeholder=v};
+  S('gIntro',d.gIntro); S('lEmail',d.email); S('loginBtn',d.sendLink);
+  S('kicker',d.kicker); S('heroLab',d.heroLab);
+  S('lIn',d.inn); S('lOut',d.out); S('viewerBanner',d.viewerBanner);
   document.querySelector('.chip[data-r="year"]').textContent=d.thisYear;
   document.querySelector('.chip[data-r="30"]').textContent=d.d30;
   document.querySelector('.chip[data-r="all"]').textContent=d.all;
-  set('tabBuy',d.tabBuy); set('tabDlv',d.tabDlv); set('tabTr',d.tabTr);
-  set('shTitle',d.addTitle); set('shSub',d.addSub);
+  S('nBuy',d.nBuy); S('nReq',d.nReq); S('nDlv',d.nDlv); S('nTr',d.nTr);
+  S('csv',d.csv);
   $('pkReq').innerHTML=d.pkReq+'<small>'+d.pkReqS+'</small>';
   $('pkBuy').innerHTML=d.pkBuy+'<small>'+d.pkBuyS+'</small>';
   $('pkDlv').innerHTML=d.pkDlv+'<small>'+d.pkDlvS+'</small>';
   $('pkTr').innerHTML =d.pkTr +'<small>'+d.pkTrS +'</small>';
-  set('lReqItem',d.reqItem); set('lReqLink',d.reqLink); set('lEstPrice',d.estPrice);
-  set('lEstPay',d.estPay); set('lReqNote',d.reqNote); set('rSave',d.sendReq);
-  set('lItem',d.item); set('lDate1',d.date); set('lProd',d.prod); set('lShip',d.ship); set('lRecv',d.recv);
-  set('lLink',d.link); set('lStat',d.deliveryStatus); set('lTrackNo',d.trackNo); set('lTrackUrl',d.trackUrl);
-  set('lShot',d.shot); set('lNote1',d.note); set('bSave',d.savePurchase);
-  set('lDate3',d.date); set('lDlvPrice',d.dlvPrice); set('lDest',d.dest); set('lDlvImg',d.dlvImg);
-  set('lNote3',d.note); set('dSave',d.saveDlv);
-  set('lSender',d.sender); set('lDate2',d.date); set('lAmount',d.amount);
-  set('lReceipt',d.receipt); set('lNote2',d.note); set('tSave',d.saveTransfer);
-  set('lProd2',d.prod); set('lShip2',d.ship); set('lRecv2',d.recv); set('kSave',d.saveBought);
-  set('csv',d.exportCsv);
-  document.querySelectorAll('.cancel').forEach(b=>b.textContent=d.cancel);
-  ph('r_item',d.reqItemPh); ph('r_note',d.reqNotePh); ph('b_item',d.itemPh); ph('b_note',d.notePh);
-  ph('d_dest',d.destPh); ph('t_name',d.senderPh); ph('t_note',d.notePh2); ph('b_track','00340434…');
+  S('lReqItem',d.reqItem); S('lReqLink',d.reqLink); S('lEstPrice',d.estPrice); S('lEstPay',d.estPay);
+  S('lReqNote',d.reqNote); S('rSave',d.sendReq);
+  S('lItem',d.item); S('lDate1',d.date); S('lProd',d.prod); S('lShip',d.ship); S('lStat',d.stat);
+  S('lLink',d.link); S('lTrackNo',d.trackNo); S('lTrackUrl',d.trackUrl); S('lShot',d.shot);
+  S('lNote1',d.note); S('bSave',d.savePurchase); S('bDel',d.del);
+  S('lDate3',d.date); S('lDlvPrice',d.dlvPrice); S('lDest',d.dest); S('lTrackNo2',d.trackNo);
+  S('lTrackUrl2',d.trackUrl); S('lDlvImg',d.dlvImg); S('lNote3',d.note); S('dSave',d.saveDlv); S('dDel',d.del);
+  S('lSender',d.sender); S('lDate2',d.date); S('lAmount',d.amount); S('lReceipt',d.receipt);
+  S('lNote2',d.note); S('tSave',d.saveTr); S('tDel',d.del);
+  S('lProd2',d.prod); S('lShip2',d.ship); S('kSave',d.confirm);
+  document.querySelectorAll('.close').forEach(b=>b.textContent=d.cancel);
+  P('r_item',d.reqItemPh); P('r_note',d.reqNotePh); P('b_item',d.itemPh); P('b_note',d.notePh);
+  P('d_dest',d.destPh); P('t_name',d.senderPh); P('t_note',d.notePh2);
   const sel=$('b_stat'), keep=sel.value||'ordered';
-  sel.innerHTML=STATUSES.map(s=>`<option value="${s}">${d.st[s]}</option>`).join('');
-  sel.value=keep;
-  buildLangBar($('langsGate')); buildLangBar($('langsApp'));
+  sel.innerHTML=STATUSES.map(s=>`<option value="${s}">${d.st[s]}</option>`).join(''); sel.value=keep;
+  const b=$('bell'); if(b) b.classList.toggle('on', typeof Notification!=='undefined'&&Notification.permission==='granted');
+  langBar($('langsGate')); langBar($('langsApp'));
+  S('secTitle', d['sec'+tab.charAt(0).toUpperCase()+tab.slice(1)]);
 }
 
 /* ---------- auth ---------- */
@@ -488,11 +473,11 @@ $('fLogin').onsubmit=async e=>{
   const {error}=await sb.auth.signInWithOtp({email:$('email').value.trim(),
     options:{emailRedirectTo:window.location.href}});
   $('loginBtn').disabled=false;
-  const s=$('gateStatus');
-  if(error){s.textContent=t('errLogin')+error.message;s.className='status err';}
-  else {s.textContent=t('linkSent');s.className='status';}
+  const n=$('gateNote');
+  if(error){n.textContent=t('errLogin')+error.message;n.className='note err'}
+  else{n.textContent=t('linkSent');n.className='note'}
 };
-$('out').onclick=async()=>{await sb.auth.signOut();location.reload();};
+$('out').onclick=async()=>{await sb.auth.signOut();location.reload()};
 
 applyLang();
 sb.auth.onAuthStateChange((_e,s)=>start(s));
@@ -500,18 +485,18 @@ const {data:{session}}=await sb.auth.getSession();
 start(session);
 
 async function start(session){
-  if(!session){$('gate').hidden=false;$('app').hidden=true;$('fab').hidden=true;return;}
+  if(!session){$('gate').hidden=false;$('app').hidden=true;$('nav').hidden=true;return}
   if(uid===session.user.id) return;
   uid=session.user.id;
-  $('gate').hidden=true; $('app').hidden=false; $('fab').hidden=false;
-  $('me').textContent=session.user.email;
+  $('gate').hidden=true; $('app').hidden=false; $('nav').hidden=false;
+  $('me').textContent=T[lang].hello+', '+(session.user.email||'').split('@')[0];
   const {data:sh}=await sb.from('shares').select('owner_id').ilike('viewer_email',session.user.email);
   viewer=!!(sh&&sh.length); ownerId=viewer?sh[0].owner_id:uid;
-  $('viewerBanner').hidden=!viewer; $('tipStrip').hidden=viewer;
+  $('viewerBanner').hidden=!viewer;
   applyLang();
   $('b_date').value=today(); $('t_date').value=today(); $('d_date').value=today();
   document.querySelector('.chip[data-r="year"]').click();
-  loadAll();
+  loadAll(); watch(); subscribePush();
 }
 
 /* ---------- data ---------- */
@@ -527,66 +512,32 @@ async function loadAll(){
   buys=p.data; trs=x.data; dlvs=g.data;
   say(''); render();
 }
-
-function shrink(file,max=1100,qual=.7){
-  return new Promise(res=>{
-    if(!file) return res(null);
+function shrink(file,max=1100,q=.7){
+  return new Promise(res=>{ if(!file) return res(null);
     const fr=new FileReader();
     fr.onload=()=>{const im=new Image();
       im.onload=()=>{const s=Math.min(1,max/Math.max(im.width,im.height));
         const c=document.createElement('canvas'); c.width=im.width*s; c.height=im.height*s;
-        c.getContext('2d').drawImage(im,0,0,c.width,c.height);
-        c.toBlob(b=>res(b),'image/jpeg',qual);};
-      im.onerror=()=>res(null); im.src=fr.result;};
-    fr.onerror=()=>res(null); fr.readAsDataURL(file);
-  });
+        c.getContext('2d').drawImage(im,0,0,c.width,c.height); c.toBlob(b=>res(b),'image/jpeg',q)};
+      im.onerror=()=>res(null); im.src=fr.result};
+    fr.onerror=()=>res(null); fr.readAsDataURL(file)});
 }
 async function upload(file){
   const blob=await shrink(file); if(!blob) return null;
   const path=`${uid}/${Date.now()}.jpg`;
   const {error}=await sb.storage.from(BUCKET).upload(path,blob,{contentType:'image/jpeg'});
-  if(error){say(t('errImg')+error.message,true);return null;}
+  if(error){say(t('errImg')+error.message,true); return null}
   return path;
 }
 async function showImg(path){
   const {data,error}=await sb.storage.from(BUCKET).createSignedUrl(path,120);
   if(error) return say(t('errImgFind'),true);
-  $('mimg').src=data.signedUrl; $('modal').classList.add('on');
+  $('vimg').src=data.signedUrl; $('viewer').classList.add('on');
 }
-$('mx').onclick=()=>$('modal').classList.remove('on');
-$('modal').onclick=e=>{if(e.target.id==='modal')$('modal').classList.remove('on')};
-
-/* ---------- sheet ---------- */
-const FORMS=['fReq','fBuy','fDlv','fTr','fBought'];
-function openSheet(which){
-  $('sheet').classList.add('on');
-  const d=T[lang];
-  $('pick').hidden = !!which;
-  FORMS.forEach(f=>$(f).hidden=true);
-  if(which){ $(which).hidden=false;
-    $('shTitle').textContent = which==='fReq'?d.pkReq : which==='fBuy'?d.pkBuy
-      : which==='fDlv'?d.pkDlv : which==='fTr'?d.pkTr : d.boughtTitle;
-    $('shSub').textContent = which==='fBought'?d.boughtSub:'';
-  } else { $('shTitle').textContent=d.addTitle; $('shSub').textContent=d.addSub; }
-}
-function closeSheet(){ $('sheet').classList.remove('on'); boughtId=null; }
-$('fab').onclick=()=>{ if(viewer) openSheet('fReq'); else openSheet(null); };
-document.querySelectorAll('.close').forEach(b=>b.onclick=closeSheet);
-$('sheet').onclick=e=>{ if(e.target.id==='sheet') closeSheet(); };
-document.querySelectorAll('#pick button').forEach(b=>b.onclick=()=>{
-  openSheet({req:'fReq',buy:'fBuy',dlv:'fDlv',tr:'fTr'}[b.dataset.f]);
-});
+$('vx').onclick=()=>$('viewer').classList.remove('on');
+$('viewer').onclick=e=>{if(e.target.id==='viewer')$('viewer').classList.remove('on')};
 
 /* ---------- render ---------- */
-function group(rows,fn){
-  let h='',m='';
-  for(const r of rows){
-    const lbl=new Date(r.date+'T12:00').toLocaleDateString(T[lang]._locale,{month:'long',year:'numeric'});
-    if(lbl!==m){m=lbl;h+='<h2>'+lbl+'</h2>';}
-    h+=fn(r);
-  }
-  return h;
-}
 function render(){
   const d=T[lang];
   const bought=buys.filter(isBought), queue=buys.filter(b=>!isBought(b));
@@ -595,138 +546,133 @@ function render(){
 
   const inn=ft.reduce((s,x)=>s+ +x.amount,0);
   const out=fb.reduce((s,b)=>s+cost(b),0)+fd.reduce((s,x)=>s+ +x.price,0);
-  const bal=trs.reduce((s,x)=>s+ +x.amount,0)
-          - bought.reduce((s,b)=>s+cost(b),0)
-          - dlvs.reduce((s,x)=>s+ +x.price,0);
+  const bal=trs.reduce((s,x)=>s+ +x.amount,0)-bought.reduce((s,b)=>s+cost(b),0)-dlvs.reduce((s,x)=>s+ +x.price,0);
 
-  $('bal').textContent=eur(bal); $('bal').className='big'+(bal<0?' neg':'');
-  $('balcap').textContent=bal<0?d.balCapNeg:d.balCap;
+  const whole=Math.trunc(Math.abs(bal)), cents=Math.round((Math.abs(bal)-whole)*100);
+  $('bal').innerHTML=(bal<0?'−':'')+'€'+whole.toLocaleString(T[lang]._l)+'<small>,'+String(cents).padStart(2,'0')+'</small>';
+  $('heroLab').textContent = bal<0 ? d.heroNeg : d.heroLab;
   $('sIn').textContent=eur0(inn); $('sOut').textContent=eur0(out);
-  $('sN').textContent=fb.length;
-  $('sOpen').textContent=bought.filter(b=>b.status!=='handed'&&b.status!=='delivered').length;
-
-  const y=(to||today()).slice(0,4);
-  const tip=bought.filter(b=>b.date.slice(0,4)===y).reduce((s,b)=>s+extra(b),0);
-  $('tipY').textContent=y;
-  $('tipbar').style.width=Math.min(100,Math.max(0,tip)/LIMIT*100)+'%';
-  $('track').classList.toggle('over',tip>LIMIT);
-  $('tiptxt').textContent=tip>LIMIT?eur0(tip)+' — '+d.over:eur0(tip)+' '+d.ofLimit;
-
-  $('tabReq').innerHTML=d.tabReq+(openReq?'<span class="badge">'+openReq+'</span>':'');
+  $('reqDot').hidden=!openReq; $('reqDot').textContent=openReq;
   $('senders').innerHTML=[...new Set(trs.map(x=>x.sender))].map(n=>'<option value="'+esc(n)+'">').join('');
+  $('secTitle').textContent=d['sec'+tab.charAt(0).toUpperCase()+tab.slice(1)];
 
-  $('listReq').innerHTML = queue.length ? group(queue,b=>{
-    const pend=b.approval==='pending', dec=b.approval==='declined';
-    const chip = pend?'<span class="tag st">'+d.pending+'</span>'
-               : dec ?'<span class="tag no">'+d.declined+'</span>'
-                     :'<span class="tag st done">'+d.approved+' · '+d.notBought+'</span>';
-    let acts='';
-    if(!viewer&&pend) acts='<button class="act" data-ok="'+b.id+'">'+d.approve+'</button>'
-                          +'<button class="act no" data-no="'+b.id+'">'+d.decline+'</button>';
-    if(!viewer&&b.approval==='approved') acts='<button class="act sec" data-buy="'+b.id+'">'+d.markBought+'</button>';
-    const canDrop=!viewer||(pend&&b.requested_by===uid);
-    return '<div class="row'+(pend?' pend':'')+'"><div class="d">'+dd(b)+'</div><div class="b">'
-      +'<div class="t">'+esc(b.item)+'</div>'
-      +(b.note?'<div class="s">'+esc(b.note)+'</div>':'')
-      +'<div class="tags">'+chip
-      +(b.link?'<a class="tag" href="'+esc(b.link)+'" target="_blank" rel="noopener">'+d.product+'</a>':'')
-      +acts+'</div></div>'
-      +(hasQuote(b)?'<div class="amt q">'+eur(quoteTotal(b))+'<small>'+d.quoted+'</small></div>':'')
-      +(canDrop?'<button class="del" data-del="purchases:'+b.id+'" data-path="">×</button>':'')
-      +'</div>';
-  }) : '<div class="empty">'+d.noReq+'</div>';
+  let html='';
+  if(tab==='req'){
+    html = queue.length ? queue.map(b=>{
+      const pend=b.approval==='pending', dec=b.approval==='declined';
+      const chip = pend?'<span class="pill w">'+d.pending+'</span>'
+                 : dec ?'<span class="pill r">'+d.declined+'</span>'
+                       :'<span class="pill g">'+d.approved+' · '+d.notBought+'</span>';
+      let acts='';
+      if(!viewer&&pend) acts='<div class="acts"><button class="act" data-ok="'+b.id+'">'+d.approve+'</button>'
+        +'<button class="act bad" data-no="'+b.id+'">'+d.decline+'</button></div>';
+      if(!viewer&&b.approval==='approved') acts='<div class="acts"><button class="act" data-buy="'+b.id+'">'+d.markBought+'</button></div>';
+      const q=nz(b.est_payment)||nz(b.est_price);
+      return '<div class="item"><span class="tile">'+esc(initials(b.item))+'</span><div class="mid">'
+        +'<div class="nm">'+esc(b.item)+'</div>'
+        +'<div class="sub">'+dayLbl(b)+(b.note?' · '+esc(b.note):'')+'</div>'
+        +chip
+        +(b.link?'<a class="pill" href="'+esc(b.link)+'" target="_blank" rel="noopener">'+d.product+'</a>':'')
+        +acts+'</div>'
+        +(q?'<div class="val">'+eur0(q)+'</div>':'')+'</div>';
+    }).join('') : '<div class="empty">'+d.emptyReq+'</div>';
+  }
+  else if(tab==='buy'){
+    html = fb.length ? group(fb, b=>{
+      const done=b.status==='handed'||b.status==='delivered';
+      return '<div class="item" data-edit="buy:'+b.id+'"><span class="tile">'+esc(initials(b.item))+'</span><div class="mid">'
+        +'<div class="nm">'+esc(b.item)+'</div>'
+        +'<div class="sub">'+dayLbl(b)+' · '+eur(nz(b.price))+(nz(b.shipping)?' + '+eur(nz(b.shipping)):'')+'</div>'
+        +'<span class="pill '+(done?'g':'w')+'">'+esc(d.st[b.status]||b.status)+'</span>'
+        +(b.tracking_no?'<span class="pill mono">'+esc(b.tracking_no)+'</span>':'')
+        +(b.image_path?'<span class="pill" data-img="'+esc(b.image_path)+'">'+d.beleg+'</span>':'')
+        +'</div><div class="val">'+eur(cost(b))+'</div></div>';
+    }) : '<div class="empty">'+d.emptyBuy+'</div>';
+  }
+  else if(tab==='dlv'){
+    html = fd.length ? group(fd, x=>
+      '<div class="item" data-edit="dlv:'+x.id+'"><span class="tile">&#9660;</span><div class="mid">'
+      +'<div class="nm">'+esc(x.destination||'')+'</div>'
+      +'<div class="sub">'+dayLbl(x)+(x.note?' · '+esc(x.note):'')+'</div>'
+      +(x.tracking_no?'<span class="pill mono">'+esc(x.tracking_no)+'</span>':'')
+      +(x.image_path?'<span class="pill" data-img="'+esc(x.image_path)+'">'+d.beleg+'</span>':'')
+      +'</div><div class="val">'+eur(+x.price)+'</div></div>'
+    ) : '<div class="empty">'+d.emptyDlv+'</div>';
+  }
+  else {
+    html = ft.length ? group(ft, x=>
+      '<div class="item" data-edit="tr:'+x.id+'"><span class="tile">'+esc(initials(x.sender))+'</span><div class="mid">'
+      +'<div class="nm">'+esc(x.sender)+'</div>'
+      +'<div class="sub">'+dayLbl(x)+(x.note?' · '+esc(x.note):'')+'</div>'
+      +(x.image_path?'<span class="pill" data-img="'+esc(x.image_path)+'">'+d.beleg+'</span>':'')
+      +'</div><div class="val in">+'+eur(+x.amount)+'</div></div>'
+    ) : '<div class="empty">'+d.emptyTr+'</div>';
+  }
+  $('list').innerHTML=html;
 
-  $('listBuy').innerHTML = fb.length ? group(fb,b=>{
-    const done=b.status==='handed'||b.status==='delivered';
-    const stTag=viewer?'<span class="tag st'+(done?' done':'')+'">'+esc(d.st[b.status]||b.status)+'</span>'
-      :'<select class="mini" data-st="'+b.id+'">'+STATUSES.map(s=>'<option value="'+s+'"'+(s===b.status?' selected':'')+'>'+d.st[s]+'</option>').join('')+'</select>';
-    const ex=extra(b);
-    return '<div class="row"><div class="d">'+dd(b)+'</div><div class="b">'
-      +'<div class="t">'+esc(b.item)+'</div>'
-      +'<div class="s">'+eur(nz(b.price))+(nz(b.shipping)?' + '+eur(nz(b.shipping))+' '+d.shipping:'')
-        +(b.received!=null?' · '+eur(nz(b.received))+' '+d.recv.replace(' €',''):'')+'</div>'
-      +(b.note?'<div class="s">'+esc(b.note)+'</div>':'')
-      +'<div class="tags">'+stTag
-      +(!viewer?'<button class="tag" data-edit="'+b.id+'">'+d.ship+'</button>':'')
-      +(b.link?'<a class="tag" href="'+esc(b.link)+'" target="_blank" rel="noopener">'+d.product+'</a>':'')
-      +(b.tracking_url?'<a class="tag" href="'+esc(b.tracking_url)+'" target="_blank" rel="noopener">'+d.tracking+'</a>':'')
-      +(b.tracking_no?'<span class="tag code">'+esc(b.tracking_no)+'</span>':'')
-      +(b.image_path?'<button class="tag" data-img="'+esc(b.image_path)+'">'+d.shotTag+'</button>':'')
-      +'</div></div>'
-      +'<div class="amt">'+eur(cost(b))+(b.received!=null?'<small>'+(ex>=0?'+':'')+eur(ex)+' '+d.extra+'</small>':'')+'</div>'
-      +(viewer?'':'<button class="del" data-del="purchases:'+b.id+'" data-path="'+esc(b.image_path||'')+'">×</button>')
-      +'</div>';
-  }) : '<div class="empty">'+d.emptyBuy+'</div>';
-
-  $('listDlv').innerHTML = fd.length ? group(fd,x=>
-     '<div class="row"><div class="d">'+dd(x)+'</div><div class="b">'
-    +'<div class="t">'+esc(x.destination||'')+'</div>'
-    +(x.note?'<div class="s">'+esc(x.note)+'</div>':'')
-    +(x.image_path?'<div class="tags"><button class="tag" data-img="'+esc(x.image_path)+'">'+d.receiptTag+'</button></div>':'')
-    +'</div><div class="amt">'+eur(+x.price)+'</div>'
-    +(viewer?'':'<button class="del" data-del="deliveries:'+x.id+'" data-path="'+esc(x.image_path||'')+'">×</button>')
-    +'</div>'
-  ) : '<div class="empty">'+d.emptyDlv+'</div>';
-
-  $('listTr').innerHTML = ft.length ? group(ft,x=>
-     '<div class="row"><div class="d">'+dd(x)+'</div><div class="b">'
-    +'<div class="t">'+esc(x.sender)+'</div>'
-    +(x.note?'<div class="s">'+esc(x.note)+'</div>':'')
-    +(x.image_path?'<div class="tags"><button class="tag" data-img="'+esc(x.image_path)+'">'+d.receiptTag+'</button></div>':'')
-    +'</div><div class="amt in">+'+eur(+x.amount)+'</div>'
-    +(viewer?'':'<button class="del" data-del="transfers:'+x.id+'" data-path="'+esc(x.image_path||'')+'">×</button>')
-    +'</div>'
-  ) : '<div class="empty">'+d.emptyTr+'</div>';
-
-  document.querySelectorAll('[data-img]').forEach(b=>b.onclick=()=>showImg(b.dataset.img));
-  document.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>del(b.dataset.del,b.dataset.path));
-  document.querySelectorAll('[data-ok]').forEach(b=>b.onclick=()=>decide(b.dataset.ok,'approved'));
-  document.querySelectorAll('[data-no]').forEach(b=>b.onclick=()=>decide(b.dataset.no,'declined'));
-  document.querySelectorAll('[data-buy]').forEach(b=>b.onclick=()=>askBought(b.dataset.buy));
-  document.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>askBought(b.dataset.edit,true));
-  document.querySelectorAll('[data-st]').forEach(s=>s.onchange=()=>setStatus(s.dataset.st,s.value));
+  document.querySelectorAll('[data-img]').forEach(b=>b.onclick=e=>{e.stopPropagation();showImg(b.dataset.img)});
+  document.querySelectorAll('[data-ok]').forEach(b=>b.onclick=e=>{e.stopPropagation();decide(b.dataset.ok,'approved')});
+  document.querySelectorAll('[data-no]').forEach(b=>b.onclick=e=>{e.stopPropagation();decide(b.dataset.no,'declined')});
+  document.querySelectorAll('[data-buy]').forEach(b=>b.onclick=e=>{e.stopPropagation();askBought(b.dataset.buy)});
+  if(!viewer) document.querySelectorAll('[data-edit]').forEach(el=>el.onclick=()=>openEdit(el.dataset.edit));
+}
+function group(rows,fn){
+  let h='',m='';
+  for(const r of rows){
+    const lbl=new Date(r.date+'T12:00').toLocaleDateString(T[lang]._l,{month:'long',year:'numeric'});
+    if(lbl!==m){m=lbl;h+='<div class="month">'+lbl+'</div>'}
+    h+=fn(r);
+  } return h;
 }
 
-/* ---------- actions ---------- */
-async function decide(id,verdict){
-  const {error}=await sb.from('purchases').update({approval:verdict}).eq('id',id);
-  if(error) return say(t('errSave')+error.message,true);
-  await loadAll(); say(verdict==='approved'?t('approvedMsg'):t('declinedMsg'));
+/* ---------- sheet ---------- */
+const FORMS=['fReq','fBuy','fDlv','fTr','fBought'];
+function openSheet(which,title){
+  $('sheet').classList.add('on');
+  $('pick').hidden=!!which;
+  FORMS.forEach(f=>$(f).hidden=true);
+  $('shTitle').textContent = which? title : T[lang].addTitle;
+  if(which) $(which).hidden=false;
 }
-function askBought(id,editing){
-  const b=buys.find(x=>x.id===id); if(!b) return;
-  boughtId=id;
-  $('k_price').value = b.price!=null?b.price:(b.est_price!=null?b.est_price:'');
-  $('k_ship').value  = b.shipping!=null?b.shipping:'';
-  $('k_recv').value  = b.received!=null?b.received:(b.est_payment!=null?b.est_payment:'');
-  openSheet('fBought');
-}
-$('fBought').onsubmit=async e=>{
-  e.preventDefault();
-  const price=numv($('k_price').value), ship=$('k_ship').value?numv($('k_ship').value):null;
-  const recv=$('k_recv').value?numv($('k_recv').value):null;
-  const b=buys.find(x=>x.id===boughtId);
-  const patch={price,shipping:ship,received:recv,paid:price+(ship||0)};
-  if(!isBought(b)){ patch.status='ordered'; patch.date=today(); }
-  const {error}=await sb.from('purchases').update(patch).eq('id',boughtId);
-  if(error) return say(t('errSave')+error.message,true);
-  closeSheet(); await loadAll(); say(t('boughtMsg'));
+function closeSheet(){ $('sheet').classList.remove('on'); editId=null; editKind=null; boughtId=null;
+  ['bDel','dDel','tDel'].forEach(i=>$(i).hidden=true); }
+$('fab').onclick=()=>{
+  editId=null; editKind=null;
+  ['fBuy','fDlv','fTr'].forEach(f=>$(f).reset()); applyLang();
+  $('b_date').value=today(); $('t_date').value=today(); $('d_date').value=today();
+  viewer? openSheet('fReq',T[lang].pkReq) : openSheet(null);
 };
-async function setStatus(id,status){
-  const {error}=await sb.from('purchases').update({status}).eq('id',id);
-  if(error) return say(t('errSave')+error.message,true);
-  await loadAll(); say(t('statusChanged'));
-}
-async function del(ref,path){
-  const [table,id]=ref.split(':');
-  if(!confirm(t('confirmDel'))) return;
-  if(path) await sb.storage.from(BUCKET).remove([path]);
-  const {error}=await sb.from(table).delete().eq('id',id);
-  if(error) return say(t('errDel')+error.message,true);
-  await loadAll(); say(t('deleted'));
+document.querySelectorAll('.close').forEach(b=>b.onclick=closeSheet);
+$('sheet').onclick=e=>{if(e.target.id==='sheet') closeSheet()};
+document.querySelectorAll('#pick button').forEach(b=>b.onclick=()=>{
+  const f=b.dataset.f;
+  openSheet(f, T[lang][{fReq:'pkReq',fBuy:'newBuy',fDlv:'newDlv',fTr:'newTr'}[f]]);
+});
+
+function openEdit(ref){
+  const [kind,id]=ref.split(':');
+  editKind=kind; editId=id;
+  if(kind==='buy'){
+    const b=buys.find(x=>x.id===id); if(!b) return;
+    $('b_item').value=b.item||''; $('b_date').value=b.date; $('b_price').value=b.price??'';
+    $('b_ship').value=b.shipping??''; $('b_stat').value=b.status||'ordered';
+    $('b_link').value=b.link||''; $('b_track').value=b.tracking_no||'';
+    $('b_turl').value=b.tracking_url||''; $('b_note').value=b.note||'';
+    $('bDel').hidden=false; openSheet('fBuy',T[lang].editBuy);
+  } else if(kind==='dlv'){
+    const x=dlvs.find(y=>y.id===id); if(!x) return;
+    $('d_date').value=x.date; $('d_price').value=x.price??''; $('d_dest').value=x.destination||'';
+    $('d_track').value=x.tracking_no||''; $('d_turl').value=x.tracking_url||''; $('d_note').value=x.note||'';
+    $('dDel').hidden=false; openSheet('fDlv',T[lang].editDlv);
+  } else {
+    const x=trs.find(y=>y.id===id); if(!x) return;
+    $('t_name').value=x.sender||''; $('t_date').value=x.date; $('t_amt').value=x.amount??'';
+    $('t_note').value=x.note||'';
+    $('tDel').hidden=false; openSheet('fTr',T[lang].editTr);
+  }
 }
 
-/* ---------- forms ---------- */
+/* ---------- write ---------- */
 $('fReq').onsubmit=async e=>{
   e.preventDefault(); $('rSave').disabled=true;
   const {error}=await sb.from('purchases').insert({
@@ -735,85 +681,173 @@ $('fReq').onsubmit=async e=>{
     link:$('r_link').value.trim()||null,
     est_price:$('r_price').value?numv($('r_price').value):null,
     est_payment:$('r_pay').value?numv($('r_pay').value):null,
-    note:$('r_note').value.trim()||null
-  });
+    note:$('r_note').value.trim()||null});
   $('rSave').disabled=false;
   if(error) return say(t('errSave')+error.message,true);
   $('fReq').reset(); applyLang(); closeSheet(); await loadAll(); say(t('reqSent'));
 };
+
 $('fBuy').onsubmit=async e=>{
   e.preventDefault(); $('bSave').disabled=true; say(t('saving'));
-  const image_path=await upload($('b_img').files[0]);
   const price=numv($('b_price').value), ship=$('b_ship').value?numv($('b_ship').value):null;
-  const {error}=await sb.from('purchases').insert({
-    date:$('b_date').value, item:$('b_item').value.trim(), approval:'approved',
-    price, shipping:ship, received:$('b_recv').value?numv($('b_recv').value):null,
-    paid:price+(ship||0), link:$('b_link').value.trim()||null, status:$('b_stat').value,
-    tracking_no:$('b_track').value.trim()||null, tracking_url:$('b_turl').value.trim()||null,
-    image_path, note:$('b_note').value.trim()||null
-  });
+  const row={date:$('b_date').value,item:$('b_item').value.trim(),price,shipping:ship,
+    paid:price+(ship||0),link:$('b_link').value.trim()||null,status:$('b_stat').value,
+    tracking_no:$('b_track').value.trim()||null,tracking_url:$('b_turl').value.trim()||null,
+    note:$('b_note').value.trim()||null};
+  const img=await upload($('b_img').files[0]); if(img) row.image_path=img;
+  let error;
+  if(editId && editKind==='buy') ({error}=await sb.from('purchases').update(row).eq('id',editId));
+  else { row.approval='approved'; ({error}=await sb.from('purchases').insert(row)); }
   $('bSave').disabled=false;
   if(error) return say(t('errSave')+error.message,true);
-  $('fBuy').reset(); applyLang(); $('b_date').value=today(); closeSheet(); await loadAll(); say(t('savedBuy'));
+  $('fBuy').reset(); applyLang(); $('b_date').value=today(); closeSheet(); await loadAll(); say(t('saved'));
 };
+
 $('fDlv').onsubmit=async e=>{
   e.preventDefault(); $('dSave').disabled=true; say(t('saving'));
-  const image_path=await upload($('d_img').files[0]);
-  const {error}=await sb.from('deliveries').insert({
-    date:$('d_date').value, price:numv($('d_price').value),
-    destination:$('d_dest').value.trim(), image_path, note:$('d_note').value.trim()||null
-  });
+  const row={date:$('d_date').value,price:numv($('d_price').value),
+    destination:$('d_dest').value.trim(),tracking_no:$('d_track').value.trim()||null,
+    tracking_url:$('d_turl').value.trim()||null,note:$('d_note').value.trim()||null};
+  const img=await upload($('d_img').files[0]); if(img) row.image_path=img;
+  let error;
+  if(editId && editKind==='dlv') ({error}=await sb.from('deliveries').update(row).eq('id',editId));
+  else ({error}=await sb.from('deliveries').insert(row));
   $('dSave').disabled=false;
   if(error) return say(t('errSave')+error.message,true);
   $('fDlv').reset(); applyLang(); $('d_date').value=today(); closeSheet(); await loadAll(); say(t('savedDlv'));
 };
+
 $('fTr').onsubmit=async e=>{
   e.preventDefault(); $('tSave').disabled=true; say(t('saving'));
-  const image_path=await upload($('t_img').files[0]);
-  const {error}=await sb.from('transfers').insert({
-    date:$('t_date').value, sender:$('t_name').value.trim(), amount:numv($('t_amt').value),
-    tip:0, image_path, note:$('t_note').value.trim()||null
-  });
+  const row={date:$('t_date').value,sender:$('t_name').value.trim(),
+    amount:numv($('t_amt').value),note:$('t_note').value.trim()||null};
+  const img=await upload($('t_img').files[0]); if(img) row.image_path=img;
+  let error;
+  if(editId && editKind==='tr') ({error}=await sb.from('transfers').update(row).eq('id',editId));
+  else { row.tip=0; ({error}=await sb.from('transfers').insert(row)); }
   $('tSave').disabled=false;
   if(error) return say(t('errSave')+error.message,true);
-  $('fTr').reset(); applyLang(); $('t_date').value=today(); closeSheet(); await loadAll(); say(t('savedTr'));
+  $('fTr').reset(); applyLang(); $('t_date').value=today(); closeSheet(); await loadAll(); say(t('saved'));
 };
 
-/* ---------- tabs, filters, export ---------- */
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
+async function wipe(table,id,path){
+  if(!confirm(t('confirmDel'))) return;
+  if(path) await sb.storage.from(BUCKET).remove([path]);
+  const {error}=await sb.from(table).delete().eq('id',id);
+  if(error) return say(t('errDel')+error.message,true);
+  closeSheet(); await loadAll(); say(t('deleted'));
+}
+$('bDel').onclick=()=>{const b=buys.find(x=>x.id===editId); wipe('purchases',editId,b&&b.image_path)};
+$('dDel').onclick=()=>{const x=dlvs.find(y=>y.id===editId); wipe('deliveries',editId,x&&x.image_path)};
+$('tDel').onclick=()=>{const x=trs.find(y=>y.id===editId); wipe('transfers',editId,x&&x.image_path)};
+
+async function decide(id,verdict){
+  const {error}=await sb.from('purchases').update({approval:verdict}).eq('id',id);
+  if(error) return say(t('errSave')+error.message,true);
+  await loadAll(); say(verdict==='approved'?t('approvedMsg'):t('declinedMsg'));
+}
+function askBought(id){
+  const b=buys.find(x=>x.id===id); if(!b) return;
+  boughtId=id;
+  $('k_price').value=b.est_price??''; $('k_ship').value='';
+  openSheet('fBought',T[lang].boughtTitle);
+}
+$('fBought').onsubmit=async e=>{
+  e.preventDefault();
+  const price=numv($('k_price').value), ship=$('k_ship').value?numv($('k_ship').value):null;
+  const {error}=await sb.from('purchases').update({price,shipping:ship,paid:price+(ship||0),
+    status:'ordered',date:today()}).eq('id',boughtId);
+  if(error) return say(t('errSave')+error.message,true);
+  closeSheet(); await loadAll(); say(t('boughtMsg'));
+};
+
+/* ---------- notifications ---------- */
+const VAPID_PUBLIC='BJxYqLbmKYoidjuNdy0f7mojC2LPFTfXozlmtfv6eA_cC3QMegsOSvg0j0xNAytZxp8S8zv5kagHcMjmTEIp0bE';
+const canNotify=()=>typeof Notification!=='undefined'&&Notification.permission==='granted';
+function urlB64(s){
+  const pad='='.repeat((4-s.length%4)%4);
+  const raw=atob((s+pad).replace(/-/g,'+').replace(/_/g,'/'));
+  return Uint8Array.from([...raw].map(c=>c.charCodeAt(0)));
+}
+async function subscribePush(){
+  if(!('serviceWorker' in navigator)||!('PushManager' in window)||!canNotify()) return;
+  try{
+    const reg=await navigator.serviceWorker.ready;
+    let sub=await reg.pushManager.getSubscription();
+    if(!sub) sub=await reg.pushManager.subscribe({userVisibleOnly:true,
+      applicationServerKey:urlB64(VAPID_PUBLIC)});
+    const j=sub.toJSON();
+    await sb.from('push_subscriptions').upsert({
+      user_id:uid, endpoint:j.endpoint, p256dh:j.keys.p256dh, auth:j.keys.auth, lang
+    },{onConflict:'endpoint'});
+  }catch(e){ console.warn('push subscribe failed',e); }
+}
+$('bell').onclick=async()=>{
+  if(typeof Notification==='undefined') return;
+  if(Notification.permission!=='granted') await Notification.requestPermission();
+  applyLang(); if(canNotify()){ ping(t('notifyOn'),''); subscribePush(); }
+};
+function ping(title,body){
+  if(!canNotify()) return;
+  try{
+    if(navigator.serviceWorker&&navigator.serviceWorker.ready)
+      navigator.serviceWorker.ready.then(r=>r.showNotification(title,
+        {body,icon:'./icon-192.png',badge:'./icon-192.png',tag:'auslagen',renotify:true}))
+        .catch(()=>new Notification(title,{body}));
+    else new Notification(title,{body});
+  }catch{}
+}
+function watch(){
+  sb.channel('auslagen-rt')
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'purchases'},p=>{
+      const r=p.new;
+      if(!viewer&&r.approval==='pending'&&r.requested_by!==uid) ping(t('nNewReq'),r.item||'');
+      if(viewer&&r.approval==='approved') ping(t('nNewBuy'),r.item||'');
+      loadAll();
+    })
+    .on('postgres_changes',{event:'UPDATE',schema:'public',table:'purchases'},p=>{
+      const r=p.new,o=p.old||{};
+      if(viewer&&r.requested_by===uid&&o.approval==='pending'&&r.approval!=='pending')
+        ping(t('nDecided'),r.item||'');
+      if(viewer&&o.paid==null&&r.paid!=null) ping(t('nNewBuy'),r.item||'');
+      loadAll();
+    })
+    .subscribe();
+}
+
+/* ---------- nav, filters, export ---------- */
+document.querySelectorAll('nav button[data-t]').forEach(b=>b.onclick=()=>{
   tab=b.dataset.t;
-  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===b));
-  $('listReq').hidden=tab!=='req'; $('listBuy').hidden=tab!=='buy';
-  $('listDlv').hidden=tab!=='dlv'; $('listTr').hidden=tab!=='tr';
+  document.querySelectorAll('nav button[data-t]').forEach(x=>x.classList.toggle('on',x===b));
+  render(); window.scrollTo({top:0,behavior:'smooth'});
 });
 document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{
   document.querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x===c));
   const n=new Date(), iso=x=>x.toISOString().slice(0,10);
-  if(c.dataset.r==='year'){from=n.getFullYear()+'-01-01';to=iso(n);}
-  else if(c.dataset.r==='30'){const x=new Date(n);x.setDate(x.getDate()-30);from=iso(x);to=iso(n);}
-  else {from='';to='';}
-  $('from').value=from; $('to').value=to;
-  if(uid) render();
+  if(c.dataset.r==='year'){from=n.getFullYear()+'-01-01';to=iso(n)}
+  else if(c.dataset.r==='30'){const x=new Date(n);x.setDate(x.getDate()-30);from=iso(x);to=iso(n)}
+  else {from='';to=''}
+  $('from').value=from; $('to').value=to; if(uid) render();
 });
 $('from').onchange=e=>{from=e.target.value;render()};
 $('to').onchange=e=>{to=e.target.value;render()};
 
 $('csv').onclick=()=>{
-  const d=T[lang];
-  const L=['TYPE;Date;Name;Price;Shipping;Received;Extra;Status;TrackingNo;Link;Note'];
-  trs.filter(x=>inR(x.date)).forEach(x=>
-    L.push(['TRANSFER',x.date,qq(x.sender),'','',de2(+x.amount),'','','','',qq(x.note)].join(';')));
-  buys.filter(b=>isBought(b)&&inR(b.date)).forEach(b=>
-    L.push(['PURCHASE',b.date,qq(b.item),de2(nz(b.price)),de2(nz(b.shipping)),
-      b.received!=null?de2(nz(b.received)):'', b.received!=null?de2(extra(b)):'',
-      d.st[b.status]||b.status,b.tracking_no||'',b.link||'',qq(b.note)].join(';')));
-  dlvs.filter(x=>inR(x.date)).forEach(x=>
-    L.push(['SHIPPING',x.date,qq(x.destination),'',de2(+x.price),'','','','','',qq(x.note)].join(';')));
+  const d=T[lang], de2=n=>n.toFixed(2).replace('.',','), q=s=>'"'+(s||'').replace(/"/g,'""')+'"';
+  const L=['TYPE;Date;Name;Price;Shipping;Total;Status;TrackingNo;Link;Note'];
+  trs.filter(x=>inR(x.date)).forEach(x=>L.push(['TRANSFER',x.date,q(x.sender),'','',de2(+x.amount),'','','',q(x.note)].join(';')));
+  buys.filter(b=>isBought(b)&&inR(b.date)).forEach(b=>L.push(['PURCHASE',b.date,q(b.item),de2(nz(b.price)),
+    de2(nz(b.shipping)),de2(-cost(b)),d.st[b.status]||b.status,b.tracking_no||'',b.link||'',q(b.note)].join(';')));
+  dlvs.filter(x=>inR(x.date)).forEach(x=>L.push(['SHIPPING',x.date,q(x.destination),'',de2(+x.price),
+    de2(-x.price),'',x.tracking_no||'','',q(x.note)].join(';')));
   if(L.length<2) return say(d.nothing,true);
   const u=URL.createObjectURL(new Blob(['\ufeff'+L.join('\n')],{type:'text/csv;charset=utf-8'}));
   const a=document.createElement('a'); a.href=u; a.download='auslagen.csv'; a.click();
   URL.revokeObjectURL(u); say(d.exported);
 };
+</script>
+<script>
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}))}
 </script>
 </body>
 </html>

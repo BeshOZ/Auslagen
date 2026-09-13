@@ -1,0 +1,22 @@
+{
+  "name": "Auslagen",
+  "short_name": "Auslagen",
+  "description": "Einkäufe, Versand, Überweisungen und Marge.",
+  "id": "/Auslagen/",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0E1412",
+  "theme_color": "#0E1412",
+  "lang": "de",
+  "dir": "auto",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Marge", "short_name": "Marge", "url": "./margins.html" }
+  ]
+}
