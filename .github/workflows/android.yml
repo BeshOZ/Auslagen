@@ -24,8 +24,21 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Accept SDK licences
+        run: yes | sdkmanager --licenses > /dev/null 2>&1 || true
+
       - name: Install Bubblewrap
         run: npm install -g @bubblewrap/cli
+
+      - name: Pre-configure Bubblewrap
+        run: |
+          mkdir -p "$HOME/.bubblewrap"
+          printf '{"jdkPath":"%s","androidSdkPath":"%s"}' \
+            "$JAVA_HOME" "$ANDROID_SDK_ROOT" > "$HOME/.bubblewrap/config.json"
+          cat "$HOME/.bubblewrap/config.json"
 
       - name: Restore or create keystore
         id: keys
@@ -97,7 +110,7 @@ jobs:
         env:
           BUBBLEWRAP_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD || 'auslagen' }}
           BUBBLEWRAP_KEY_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD || 'auslagen' }}
-        run: bubblewrap build --skipPwaValidation
+        run: bubblewrap build --skipPwaValidation < /dev/null
 
       - name: Collect outputs
         if: always()
