@@ -110,7 +110,9 @@ jobs:
         env:
           BUBBLEWRAP_KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD || 'auslagen' }}
           BUBBLEWRAP_KEY_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD || 'auslagen' }}
-        run: bubblewrap build --skipPwaValidation < /dev/null
+        run: |
+          set -o pipefail
+          yes | bubblewrap build --skipPwaValidation
 
       - name: Collect outputs
         if: always()
